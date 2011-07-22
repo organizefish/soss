@@ -1,0 +1,19 @@
+----------------
+REQUIREMENTS
+----------------
+
+1. MySQL version >= 3.23.x 
+
+2. Web server running PHP version >= 5.2 with MySQL and Zip support.  If LDAP
+   is desired, PHP must also have LDAP support.
+
+3. YUI >= 2.7 (http://developer.yahoo.com/yui) (included)
+   
+4. Due to the filesystem differences, currently only UNIX/Linux systems are 
+   supported on the server side.
+   
+5. Your PHP ini file should set reasonable values for post_max_size and 
+   upload_max_filesize, as these obviously affect file uploads.  (Also, check
+   the value for memory_limit.)
+   
+

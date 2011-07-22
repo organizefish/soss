@@ -1,0 +1,34 @@
+@CHARSET "UTF-8";
+
+html, body {height:100%;}
+html { background:rgb(125,125,155); }
+body {margin:0;  }
+#doc2 {background:white; min-height:100%;}
+#doc2 #bd {padding:0 1.5em; padding-bottom:5em; margin-bottom:auto;}
+#doc2 #ft { border-top: 1px solid rgb(180,180,180); padding:1em; font-style:italic; font-size:95%;}
+h1 { margin-left: 1em; }
+.h2style { font-size:123.1%; font-weight:bold; margin:1em 0; }
+fieldset { border: 1px rgb(120,120,120) solid; padding:0.75em; margin:0.8em 0;}
+
+div.top-bar {
+    color: white;
+    background: rgb(80,80,80);
+    text-align: right;
+    font-size: 80%;
+    padding: 0.5em 1em 0.5em 0.5em;
+    margin: 0 0.5em 0 0.5em;
+}
+div.top-bar a { color: white; }
+div.top-bar a:hover { color: red; }
+
+.late-submission { background:rgb(255,155,155); color:black; }
+#header-username { margin-right:1.5em; }
+#user-class-name { color: rgb(125,125,125); }
+.reqd { color:red; font-weight: bold; }
+
+.no-border { border: 0; }
+.no-border td { border: 0; }
+
+table.center { margin:auto; }
+.instructions { font-size:90%; font-style:italic; margin-left:1em; margin-right:1em; text-align:left;}
+.error { color:black; margin:0.8em; padding:0.8em; background:rgb(255,150,150); border:red solid 2px; }

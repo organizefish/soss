@@ -1,0 +1,15 @@
+#submission-list-container { margin-left:1em; }
+
+input.file_input { }
+
+table#upload-form-table { border: solid rgb(165,185,252) 4px; margin-left:1em; }
+#upload-form-module { padding: 0 0.5em 0 0.5em; clear:both;}
+.upload-button-element { padding:0.5em 0em 0em 1em; }
+.file-size-info { color: rgb(100,30,30); font-style:italic; font-size:85%; }
+
+#show-hide-form{width:18px;height:22px;cursor:pointer;float:left;}
+.show-hide-icon-1{background:url(../img/sprite-menu.gif) -8px 2px no-repeat;}
+.show-hide-icon-1:hover{background:url(../img/sprite-menu.gif) -8px -77px no-repeat;}
+
+.show-hide-icon-2{background:url(../img/sprite-menu.gif) -8px -315px no-repeat;}
+.show-hide-icon-2:hover{background:url(../img/sprite-menu.gif) -8px -395px no-repeat;}

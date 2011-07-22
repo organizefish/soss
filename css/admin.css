@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+
+.soss-form-element { margin:0.75em 0; }
+#download-button { margin: 0.75em 0; }
+#class-list-textarea {width:40em; height:15em; }
+.delete-row-cell { cursor: pointer; }
+.disabled em { color:rgb(180,180,180); }

@@ -1,0 +1,47 @@
+----------------
+REQUIREMENTS
+----------------
+
+See README
+
+----------------
+ INSTALLATION
+----------------
+
+0. Make sure that your
+   PHP installation includes Zip support and LDAP (if LDAP is desired).
+
+1. Create a MySQL user and database for the SOSS system.  For the purposes
+   of this document, I will assume that the database is called soss_db and
+   the user with full privileges to this database is soss_user.
+   
+   $ mysqladmin --user=root -p create soss_db
+   $ mysql --user=root -p mysql
+   mysql> CREATE USER soss_user;
+   mysql> GRANT ALL PRIVILEGES ON soss_db.* TO 'soss_user'@'localhost' 
+       -> IDENTIFIED BY 'some_pass';
+
+2. Unpack the SOSS tarball into a directory that is accessible by the web
+   server.
+   
+3. Create the database tables using the create_tables.sql script located in
+   the db directory.  For example:
+   
+   $ mysql -u soss_user -p soss_db < db/phpsoss_db.sql
+
+4. Create a directory for the storage of uploaded files.  This directory
+   need not be in the web tree, but must have write and execute permissions 
+   for the user that the web server runs under.
+   
+5. Edit the file config.php to match your installation.  Take special care to
+   change the SOSS_FILE_REPOSITORY constant to point to the directory that
+   you created in the previous step.
+   
+6. (Optional) Edit the files student.html, admin.html, and grader.html
+   to make them more appropriate for your users.  Search for "PAGE TITLE",
+   "PAGE FOOTER", and "PASSWORD WARNING".
+   
+7. Bring up the file faculty_login.html through your web server, the default
+   password is "faculty" (you should probably change it).
+
+

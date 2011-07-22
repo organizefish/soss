@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+fieldset { width:35em; }
+
+.login-fields {  }
+.login-fields li { margin-bottom:0.5em; list-style:none; }
+.login-fields label { display:block; float:left; width: 6.5em; }

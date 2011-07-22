@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+<!-- PAGE TITLE -->
+    <title>SOSS File Submission System -- Administrator</title>
+<!-- END PAGE TITLE -->
+
+    <!-- YUI CSS files --> 
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/reset-fonts-grids/reset-fonts-grids.css" />
+	<link type="text/css" rel="stylesheet" href="lib/yui/build/base/base-min.css" />
+    <link type="text/css" rel="stylesheet" href="lib/yui/build/tabview/assets/skins/sam/tabview.css" />
+    <link rel="stylesheet" type="text/css" href="lib/yui/build/button/assets/skins/sam/button.css" />
+	<link type="text/css" rel="stylesheet" href="lib/yui/build/datatable/assets/skins/sam/datatable.css" />
+	<link type="text/css" rel="stylesheet" href="lib/yui/build/calendar/assets/skins/sam/calendar.css" />
+	<link rel="stylesheet" type="text/css" href="lib/yui/build/container/assets/skins/sam/container.css" />
+	
+	<!-- My CSS -->
+	<link type="text/css" rel="stylesheet" href="css/soss.css" />
+	<link type="text/css" rel="stylesheet" href="css/admin.css" />
+
+	<!-- YUI Javascript -->	
+	<script type="text/javascript" src="lib/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+	<script type="text/javascript" src="lib/yui/build/element/element-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/tabview/tabview-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/datasource/datasource-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/resize/resize-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/json/json-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/button/button-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/connection/connection-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/get/get-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/dragdrop/dragdrop-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/calendar/calendar-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/datatable/datatable-min.js"></script>
+	<script type="text/javascript" src="lib/yui/build/container/container-min.js"></script>
+	
+	<!-- My Javascript -->
+	<script type="text/javascript" src="js/soss.js"></script>
+	<script type="text/javascript" src="js/admin.js"></script>
+	<script type="text/javascript" src="js/download.js"></script>
+	<script type="text/javascript" src="js/assignments.js"></script>
+	<script type="text/javascript" src="js/classes.js"></script>
+	<script type="text/javascript" src="js/students.js"></script>
+  </head>
+<body class="yui-skin-sam">
+	<div id="doc2">
+		<div id="hd">
+			<div class="top-bar">
+				<span id="header-username"></span>
+				<a id="change-class-link" href="#">Change Class</a>&nbsp;|&nbsp;<a id="logout-link" href="#" >Sign Off</a>&nbsp;|&nbsp;<a id="change-pass-link" href="#">Change&nbsp;Password</a>
+			</div>
+
+<!-- PAGE TITLE -->
+			<h1>SOSS File Submission System -- <span id="user-class-name"></span></h1>
+<!-- END PAGE TITLE -->
+			
+		</div>
+		<div id="bd">
+		
+			<div id="soss-admin-tabs-container"></div>
+			<div id="soss-admin-tab-0">
+				<div class="soss-form-element">
+				<b>List by</b>: Student: 
+				<select id="soss-admin-student-select" name="student">
+				<option value="__all__">[All]</option></select>
+				and assignment: 
+				<select id="soss-admin-assignment-select" name="assignment">
+				<option value="__all__">[All]</option>
+				</select>
+				<button id="soss-admin-list-button">List</button>
+				</div>
+				
+				<form id="soss-download-form" method="post" action="download.php">
+				<div id="soss-admin-submission-table"></div>
+				<button id="download-button">Download Selected</button>
+				</form>
+			</div>
+			<div id="soss-admin-tab-1">
+				<div class="soss-form-element">
+				<table class="no-border">
+				<tr><td><b>Name:</b><span class="reqd">*</span></td> 
+				<td>
+				<input id="soss-admin-new-assignment-name" type="text" name="assgn_name" size="30" maxlength="50" />
+				</td>
+				<td rowspan="2"><button id="soss-admin-new-assignment-button">Add</button></td>
+				</tr>
+				<tr><td>
+				<b>Due Date: </b></td>
+				<td>
+				<input type="text" id="soss-admin-due-date" name="dueDate" value="" />
+				<button type="button" id="soss-assignment-show-cal">
+				<img src="img/calbtn.gif" width="18" height="18" alt="Calendar" ></button>
+				<select id="soss-assignment-hour-select" name="hour"></select>
+				:<select id="soss-assignment-minute-select" name="minute"></select>
+				</td></tr>
+				</table>
+				</div>
+				
+				<div id="soss-admin-assignment-table"></div>
+			</div>
+			<div id="soss-admin-tab-2">
+				<div class="soss-form-element">
+				Name:<span class="reqd">*</span>
+				<input id="soss-admin-new-class-name" type="text" name="assgn_name" size="30" maxlength="50" />
+				term:<span class="reqd">*</span> <select id="soss-admin-term-select" name="term"></select>
+				year:<span class="reqd">*</span> <input id="soss-admin-class-year" type="text" maxlength="4" size="4" name="year" />
+				<button id="soss-admin-new-class-button">Add</button>
+				</div>
+				
+				<div id="soss-admin-classes-table"></div>
+			</div>
+			<div id="soss-admin-tab-3">
+				<div class="soss-form-element">
+                                <p>
+                                Username:<span class="reqd">*</span>
+				<input id="soss-admin-new-stu-uname" type="text" name="student_uname" size="20" maxlength="70" />
+				EMail:
+				<input id="soss-admin-new-stu-email" type="text" name="student_email" size="20" maxlength="70" />
+                                </p><p>First Name:<input id="soss-admin-new-stu-fname" type="text" name="student_fname" size="10" maxlength="25" />
+				Last Name:<input id="soss-admin-new-stu-lname" type="text" name="student_lname" size="10" maxlength="25" />
+				<button id="soss-admin-new-stu-button">Add</button>
+                                </p>
+                                <p><button id="soss-admin-enter-class-list-button">Enter Multiple Students</button></p>
+				</div>
+				
+				<div id="soss-admin-students-table"></div>
+			</div>
+		</div>
+		
+		<div id="ft">
+<!-- PAGE FOOTER -->
+		<p>Use of this system is restricted to authorized personnel only 
+ 		and implies that you have read and understand general university network 
+ 		policy. Unauthorized access, or attempts to access this system will be reported 
+ 		to appropriate criminal and school authorities.</p>
+<!-- END PAGE FOOTER --> 		
+ 		<p>SOSS version: <span id="soss-version"></span></p>
+		</div>
+	</div>
+	<div id="choose-class-dialog">
+			<div class="hd">Select Class</div>
+			<div class="bd">
+			<form method="post" action="setclass.php">
+			<p><select id="choose-class-dialog-select" name="id"></select></p>
+			<p><input id="choose-class-dialog-checkbox" type="checkbox" /> 
+			Include inactive classes.</p>
+			</form>
+			</div>
+	</div>
+	
+	<div id="multiple-students-dialog">
+			<div class="hd">Add Multiple Students</div>
+			<div class="bd">
+			<form method="post" action="insert.php?t=bulkstudent">
+			<p><textarea id="class-list-textarea" name="class_list"></textarea></p>
+			<div class="instructions"><p>Class list must contain a list of the students,
+      one student per line.  Each line can have any of the following three 
+	  formats:</p>
+	  		<p>A single email address.  (Example: <code>jdoe@example.com</code>)</p>
+	  		<p>A standard CSV style with last name, first name and email.  
+	  		(Example:<code>Doe, John, jdoe@example.com</code>)</p>
+	  		<p>Last name, then a comma, then first name, followed by the email in
+	  parenthesis.  (Example: <code>Doe, John (jdoe@example.com)</code>).</p>
+	  	<p>(Note: A full class list in the above format can be generated from Banner by going to "Summary
+	  Class List w/o Hyperlinks", selecting the top-most checkbox under the E-Mail
+	  column, then clicking on "Send email to selected
+	  students".)</p>
+	  		</div>
+	  		</form>
+			</div>
+	</div>
+	
+	<div id="change-admin-pass-dialog">
+		<div class="hd">Change Password</div>
+		<div class="bd">
+		<form method="post" action="update.php?a=adminPass">
+		<table class="no-border center">
+			<tr><td><label for="old_pass">Current Password:</label></td>
+			<td><input type="password" name="old_pass" /></td></tr>
+			<tr><td><label for="pass_1">New Password:</label></td>
+			<td><input type="password" name="pass_1" /></td></tr>
+			<tr><td><label for="pass_2">New Password (again):</label></td>
+			<td><input type="password" name="pass_2" /></td></tr>
+		</table>
+		</form>
+		</div>
+	</div>
+	
+</body>
+</html>
