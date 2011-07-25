@@ -55,8 +55,6 @@ define("SOSS_LDAP_PORT", "389");
 // The DN used to bind with when authenticating student accounts.  The
 // '%u' is replaced with the SOSS username.
 define("SOSS_LDAP_ACCOUNT_DN", "uid=%u,ou=People,dc=example,dc=com");
-// The base DN for LDAP searches
-define("SOSS_LDAP_BASEDN", "ou=People,dc=example,dc=com");
 // The LDAP DN to bind with when searching for accounts 
 // Leave this blank if your LDAP server allows anonymous searches.
 define("SOSS_LDAP_SEARCH_BIND_DN", "" );
