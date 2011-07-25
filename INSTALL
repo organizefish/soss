@@ -1,12 +1,12 @@
-----------------
+================
 REQUIREMENTS
-----------------
+================
 
 See README
 
-----------------
+================
  INSTALLATION
-----------------
+================
 
 0. Make sure that your
    PHP installation includes Zip support and LDAP (if LDAP is desired).
@@ -36,12 +36,15 @@ See README
 5. Edit the file config.php to match your installation.  Take special care to
    change the SOSS_FILE_REPOSITORY constant to point to the directory that
    you created in the previous step.
+
+6. You may need to install the YUI library into the lib directory if it is not
+   already there.  Download the full SDK from developer.yahoo.com/yui/2
    
-6. (Optional) Edit the files student.html, admin.html, and grader.html
+7. (Optional) Edit the files student.html, admin.html, and grader.html
    to make them more appropriate for your users.  Search for "PAGE TITLE",
    "PAGE FOOTER", and "PASSWORD WARNING".
-   
-7. Bring up the file faculty_login.html through your web server, the default
+  
+8. Bring up the file faculty_login.html through your web server, the default
    password is "faculty" (you should probably change it).
 
 
