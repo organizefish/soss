@@ -53,16 +53,29 @@ define("SOSS_LDAP_HOST", "ldap://localhost");
 // The LDAP port (389 or 636 typically)
 define("SOSS_LDAP_PORT", "389");
 // The DN used to bind with when authenticating student accounts.  The
-// '%s' is replaced with the SOSS username.
-define("SOSS_LDAP_ACCOUNT_DN", "uid=%s,ou=People,dc=example,dc=com");
+// '%u' is replaced with the SOSS username.
+define("SOSS_LDAP_ACCOUNT_DN", "uid=%u,ou=People,dc=example,dc=com");
 // The base DN for LDAP searches
 define("SOSS_LDAP_BASEDN", "ou=People,dc=example,dc=com");
 // The LDAP DN to bind with when searching for accounts 
 // Leave this blank if your LDAP server allows anonymous searches.
-define("SOSS_LDAP_SEARCH_BIND_DN", "cn=search user,dc=example,dc=com" );
-// The password for the above DN
-define("SOSS_LDAP_SEARCH_BIND_PW", "secret");
-// The filter to use when searching for accounts.
-define("SOSS_ACCOUNT_FILTER", "(employeeType=Student)");
+define("SOSS_LDAP_SEARCH_BIND_DN", "" );
+// The password for the above DN (if necessary)
+define("SOSS_LDAP_SEARCH_BIND_PW", "");
+
+// Filters used when LDAP is used and accounts are being added to a class.
+// The system will look for the account in LDAP by searching by email address
+// or username.  It searches by email address when you are adding accounts
+// "in bulk" and it searches by username when you are adding a single account.
+// The system looks for the account and if found, adds it to the class.
+
+// The base of account searches.
+define("SOSS_ACCOUNT_SEARCH_BASE", "ou=People,dc=example,dc=com");
+// The filter to use when searching for accounts by email. 
+//  '%e' is replaced with the email address of the account.
+define("SOSS_ACCOUNT_FILTER_EMAIL", "(mail=%e)");
+// The filter to use when searching for accounts by username.
+//  '%u' is replaced with the username of the account.
+define("SOSS_ACCOUNT_FILTER_UNAME", "(uid=%u)");
 
 //ini_set("display_errors", 1);

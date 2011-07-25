@@ -184,13 +184,9 @@ class Soss_Insert {
                             "Unable to bind to LDAP server: ".ldap_error($ds) );
         }
 
-        $filter = "(uid=$uname)";
-        $searchAdd = trim( SOSS_ACCOUNT_FILTER );
-        if( !empty($searchAdd) ) {
-            $filter = "(&".$filter.$searchAdd.")";
-        }
+        $filter = preg_replace('/\%u/', $uname, SOSS_ACCOUNT_FILTER_UNAME);
 
-        $sresult = ldap_search($ds, SOSS_LDAP_BASEDN, $filter);
+        $sresult = ldap_search($ds, SOSS_ACCOUNT_SEARCH_BASE, $filter);
 
         if( $sresult === false ) {
             soss_send_json_response(SOSS_RESPONSE_ERROR,
@@ -232,13 +228,9 @@ class Soss_Insert {
 
         foreach( $email_list as $email => $info ) {
 
-            $filter = "(mail=$email)";
-            $searchAdd = trim( SOSS_ACCOUNT_FILTER );
-            if( !empty($searchAdd) ) {
-                $filter = "(&".$filter.$searchAdd.")";
-            }
+            $filter = preg_replace('/\%e/', $email, SOSS_ACCOUNT_FILTER_EMAIL);
 
-            $sresult = ldap_search($ds, SOSS_LDAP_BASEDN, $filter);
+            $sresult = ldap_search($ds, SOSS_ACCOUNT_SEARCH_BASE, $filter);
 
             if( $sresult === false ) {
                 soss_send_json_response(SOSS_RESPONSE_ERROR,

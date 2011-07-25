@@ -138,9 +138,7 @@ class Soss_Authenticate {
                     "Unable to connect to LDAP server.");
         }
         ldap_set_option($ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-
-        $dn = "uid=".$uname.",".SOSS_LDAP_BASEDN;
-        
+        $dn = preg_replace('/\%u/', $uname, SOSS_LDAP_ACCOUNT_DN);
         $result = @ldap_bind($ds, $dn, $pass);
 
         ldap_close($ds);
