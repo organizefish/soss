@@ -36,8 +36,6 @@ CREATE TABLE faculty (
 );
 INSERT INTO faculty (passwd) VALUES ('5cee1c23e1604e9ae4f2c0e93bbb4c6eb72b5f2c');
 
-/* May need to modify this table to include information about the test harness
-   itself (location on the file system). */
 DROP TABLE IF EXISTS assignments;
 CREATE TABLE assignments (
   class_id BIGINT NOT NULL,

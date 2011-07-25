@@ -27,7 +27,7 @@ See README
 3. Create the database tables using the create_tables.sql script located in
    the db directory.  For example:
    
-   $ mysql -u soss_user -p soss_db < db/phpsoss_db.sql
+   $ mysql -u soss_user -p soss_db < db/soss.sql
 
 4. Create a directory for the storage of uploaded files.  This directory
    need not be in the web tree, but must have write and execute permissions 
