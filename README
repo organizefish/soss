@@ -22,7 +22,7 @@ REQUIREMENTS
 2. Web server running PHP version >= 5.2 with MySQL support.  If LDAP
    is desired, PHP must also have LDAP support.
 
-3. YUI >= 2.7 (http://developer.yahoo.com/yui) (included)
+3. YUI 2.x (http://developer.yahoo.com/yui/2/)
    
 4. Due to the filesystem differences, currently only UNIX/Linux systems are 
    supported on the server side.
