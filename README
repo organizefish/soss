@@ -1,6 +1,21 @@
-----------------
+==========================================
+SOSS: Simple Online Submission System
+==========================================
+
+This is a simple system for managing uploaded files, primarily for use within
+a classroom setting.  It allows you to manage a set of classes, populate the
+classes with students, and create a set of assignments for each class.  Students
+can upload one or more files for each assignment, and the instructor can
+view and download the submitted files individually or in bulk.
+
+This system is designed with the needs of computer science classes in mind, but
+could be used with other classes as well.  It is designed to be very lightweight,
+with very few requirements.  It provides a smaller alternative to more bulky
+solutions like Moodle, Sakai, or Blackboard.
+
+================
 REQUIREMENTS
-----------------
+================
 
 1. MySQL version >= 5.x 
 
