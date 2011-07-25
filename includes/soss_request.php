@@ -1,13 +1,18 @@
 <?php
 
-// --------------------------------------------------------------------
-// This function returns an item from the $_REQUEST array corresponding
-// to the provided key.  If magic quotes is enabled, slashes are
-// removed from the data before being returned.  If $trim_val is
-// true, white space is also removed from both sides of the data
-// before it is returned.  If the item is an array, all elements of
-// the array are similarly processed before being returned.
-// -------------------------------------------------------------------
+/**
+ * This function returns an item from the $_REQUEST array corresponding
+ * to the provided key.  If magic quotes is enabled, slashes are
+ * removed from the data before being returned.  If $trim_val is
+ * true, white space is also removed from both sides of the data
+ * before it is returned.  If the item is an array, all elements of
+ * the array are similarly processed before being returned.
+ *
+ * @param string $key the key
+ * @param boolean $trim_val whether or not to trim spaces surrouding the value 
+ * @return string,array the value corresponding to $key or NULL if the $key is not
+ *         found.
+ */
 function soss_get_request( $key, $trim_val = True ) {
     
     if( isset( $_REQUEST[$key] ) ) {
@@ -45,6 +50,3 @@ function soss_get_request( $key, $trim_val = True ) {
     }
     
 }
-
-
-?>

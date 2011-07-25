@@ -7,7 +7,7 @@
  ****************************************************/
 
 // Version
-define("SOSS_VERSION", "1.0-beta");
+define("SOSS_VERSION", "1.0");
 
 // Set the include path
 $includes = array();
@@ -28,5 +28,3 @@ define("AUTH_STUDENT", 100);
 
 // Start the session
 session_start();
-
-?>

@@ -63,6 +63,6 @@ define("SOSS_LDAP_SEARCH_BIND_DN", "cn=search user,dc=example,dc=com" );
 // The password for the above DN
 define("SOSS_LDAP_SEARCH_BIND_PW", "secret");
 // The filter to use when searching for accounts.
-define("SOSS_ACCOUNT_FILTER", "(|(employeeType=Student))");
+define("SOSS_ACCOUNT_FILTER", "(employeeType=Student)");
 
 //ini_set("display_errors", 1);

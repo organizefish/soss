@@ -2,9 +2,9 @@
 REQUIREMENTS
 ----------------
 
-1. MySQL version >= 3.23.x 
+1. MySQL version >= 5.x 
 
-2. Web server running PHP version >= 5.2 with MySQL and Zip support.  If LDAP
+2. Web server running PHP version >= 5.2 with MySQL support.  If LDAP
    is desired, PHP must also have LDAP support.
 
 3. YUI >= 2.7 (http://developer.yahoo.com/yui) (included)
@@ -16,4 +16,6 @@ REQUIREMENTS
    upload_max_filesize, as these obviously affect file uploads.  (Also, check
    the value for memory_limit.)
    
+6. The zip executable (http://www.info-zip.org/Zip.html) must be installed on 
+   the server in order to support downloads of multiple files.
 

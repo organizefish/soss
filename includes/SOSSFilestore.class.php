@@ -234,6 +234,14 @@ class SOSSFilestore {
         }
     }
 
+    /**
+     * Deletes all files within a submission from the file repository.  This
+     * does not change the database at all.
+     * 
+     * @param  $stu_uname the student username
+     * @param type $assignment the assignment name
+     * @param type $classid the class ID number
+     */
     private static function deleteSubmission($stu_uname, $assignment, $classid) {
 
         $dir = self::getFullPathDirectory($stu_uname, $assignment, $classid);
@@ -257,6 +265,16 @@ class SOSSFilestore {
         }
     }
 
+    /**
+     * Returns a list of file names found in the repository for a given
+     * submission.
+     * 
+     * @param string $stu_uname the student username
+     * @param string $assignment the assignment name
+     * @param int $classid the class ID number
+     * @return array a list of files found in the repository under the
+     *        submission corresponding to the username, assignment, and classID.
+     */
     public static function getSubmissionFileNames($stu_uname, $assignment, $classid) {
 
         $dir = self::getFullPathDirectory($stu_uname, $assignment, $classid);
@@ -282,25 +300,59 @@ class SOSSFilestore {
         }
     }
 
+    /**
+     * Returns the full path to the class' directory.
+     * @param int or string $classid the class ID number
+     * @return string the full path to the class' directory
+     */
     private static function getFullPathClassDirectory( $classid ) {
         return SOSS_FILE_REPOSITORY . DIRECTORY_SEPARATOR . $classid;
     }
     
+    /**
+     * Returns the full path to a file within a submission.
+     * @param string $fileName the file name
+     * @param string $uname the account username
+     * @param string $assignment the assignment name
+     * @param int $classid the class ID number
+     * @return string the full path to fileName.
+     */
     public static function getFullPathFile($fileName, $uname, $assignment, $classid) {
         return self::getFullPathDirectory($uname, $assignment, $classid) .
         DIRECTORY_SEPARATOR . $fileName;
     }
 
+    /**
+     *
+     * @param string $stu_uname student username
+     * @param string $assignment assignment name
+     * @param int $classid class ID number
+     * @return string the full path to a submission directory
+     */
     public static function getFullPathDirectory($stu_uname, $assignment, $classid) {
         return SOSS_FILE_REPOSITORY . DIRECTORY_SEPARATOR .
         self::getRelativePathDirectory($stu_uname, $assignment, $classid);
     }
 
+    /**
+     *
+     * @param type $stu_uname
+     * @param type $assignment
+     * @param type $classid
+     * @return string path to a submission directory relative to the repository.
+     */
     public static function getRelativePathDirectory($stu_uname, $assignment, $classid) {
         return $classid . DIRECTORY_SEPARATOR . $assignment .
         DIRECTORY_SEPARATOR . $stu_uname;
     }
     
+    /**
+     *
+     * @param type $stu_uname
+     * @param type $assignment
+     * @return string path to a submission directory relative to the class
+     *        directory.
+     */
     private static function getRelativePathDirectoryUnderClassID($stu_uname, $assignment) {
         return $assignment . DIRECTORY_SEPARATOR . $stu_uname;
     }
