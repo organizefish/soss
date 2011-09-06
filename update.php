@@ -133,7 +133,7 @@ function change_student_pass() {
 				SOSS_DB::$STUDENT_TABLE,
 				$db->dbclean( sha1($new_pass_1) ),
 				$db->dbclean( $_SESSION['classid'] ),
-				$db->dbclean( $_SESSION['username'] ) );
+				$db->dbclean( $_SESSION['uname'] ) );
 			
 			$result = $db->query($query);
    
