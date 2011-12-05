@@ -33,20 +33,28 @@ if( empty($query) ) {
 	soss_send_json_response(SOSS_RESPONSE_ERROR, "No query selected.");
 }
 
-if( $query == "submissions" ) {
-	send_submission_list();
-} elseif ( $query == "getCoreInfo" ) {
-	send_core_info();
-} elseif( $query == "assignments" ) {
-	send_assignments();
-} elseif( $query == "students" ) {
-	send_students();
-} elseif( $query == "classes" ) {
-	send_classes();
-} elseif( $query == "terms" ) {
-	send_terms();
-} else {
-	soss_send_json_response(SOSS_RESPONSE_ERROR,"Unrecognized query.");
+switch( $query )
+{
+	case "coreInfo":
+		sendCoreInfo();
+		break;
+	case "submissions":
+		send_submission_list();
+		break;
+	case "assignments":
+		send_assignments();
+		break;
+	case "students":
+		send_students();
+		break;
+	case "classes":
+		send_classes();
+		break;
+	case "terms":
+		send_terms();
+		break;
+	default:
+		soss_send_json_response(SOSS_RESPONSE_ERROR,"Unrecognized query.");
 }
 
 function send_terms() {
@@ -183,23 +191,27 @@ function send_assignments() {
 	}
 }
 
-function send_core_info() {
-	// Anyone who is logged in can access this data
-	$auth = soss_auth();
-	if( $auth <= 0 ) {
-		soss_send_json_response(SOSS_RESPONSE_PERMISSION_DENIED, "Access Denied.");
-	}
-	
+// Core information that is available to all users
+function sendCoreInfo()
+{
 	$info = array();
-	if( $auth < AUTH_FACULTY ) {
-		$info['uname'] = $_SESSION['uname'];
-	} else {
-		$info['uname'] = "Faculty";
+	$info['useLdap'] = SOSS_USE_LDAP;
+	$info['version'] = SOSS_VERSION;
+	
+	// If the client is logged in, pass the relevant session info
+	$auth = soss_auth();
+	$info['session'] = array();
+	$info['session']['authenticated'] = false;
+	if( $auth > 0 ) {
+		$info['session']['authenticated'] = true;
+		if( $auth < AUTH_FACULTY ) {
+			$info['session']['uname'] = $_SESSION['uname'];
+		} else {
+			$info['session']['uname'] = "Faculty";
+		}
+		$info['session']['className'] = $_SESSION['class_name'];
+		$info['session']['classid'] = $_SESSION['classid'];
 	}
-	$info['className'] = $_SESSION['class_name'];
-	$info['classid'] = $_SESSION['classid'];
-        $info['useLdap'] = SOSS_USE_LDAP;
-        $info['version'] = SOSS_VERSION;
 	
 	soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Success", $info);
 }

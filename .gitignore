@@ -1,2 +1,4 @@
 # Eclipse settings
 .settings
+# YUI library
+lib/yui

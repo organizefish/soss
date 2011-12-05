@@ -20,6 +20,13 @@
     SOFTWARE.
  */
 
+YUI().use('event', function(Y) {
+	Y.Global.on('soss:ready', function(e) {
+		Y.log("login.js: soss version = " + YUI.soss.core.version);
+	});
+});
+
+/*
 (function() {
 	
 	var Dom = YAHOO.util.Dom,
@@ -135,3 +142,4 @@
 	
 	Evt.onDOMReady(initUI);
 })();
+*/

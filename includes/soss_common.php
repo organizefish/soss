@@ -28,7 +28,7 @@
  ****************************************************/
 
 // Version
-define("SOSS_VERSION", "1.0");
+define("SOSS_VERSION", "2.0.0");
 
 // Set the include path
 $includes = array();
