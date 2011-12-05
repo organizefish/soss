@@ -5,11 +5,10 @@
     <title>SOSS File Submission System -- Student Login</title>
 <!-- END PAGE TITLE -->
 
-    <!-- YUI CSS files --> 
- 	<!--  
- 	<link type="text/css" rel="stylesheet" href="lib/yui/build/reset-fonts-grids/reset-fonts-grids.css" />
-	<link type="text/css" rel="stylesheet" href="lib/yui/build/base/base-min.css" />
-	-->
+    <!-- YUI CSS files -->
+    <link type="text/css" rel="stylesheet" href="lib/yui/build/cssreset/cssreset-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssbase/cssbase-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssfonts/cssfonts-min.css" />
 	
 	<!-- My CSS -->
 	<link type="text/css" rel="stylesheet" href="css/soss.css" />
@@ -19,7 +18,6 @@
 	<script src="lib/yui/build/yui/yui-min.js"></script>
 	
 	<!-- My Javascript -->
-	<script type="text/javascript" src="js/soss.js"></script>
 	<script type="text/javascript" src="js/login.js"></script>
   </head>
 <body class="yui3-skin-sam">
@@ -42,7 +40,7 @@
 			<li><label>Username:</label><input id="uname" name="uname" type="text" /></li>
 			<li><label>Password:</label><input id="pass" name="pass" type="password" /></li>
 		</ul>
-		<input id="submit-button" type="submit" value="Login" />
+		<button id="login-button">Login</button>
 		</fieldset>
 		</form>
 	</div>

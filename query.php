@@ -213,6 +213,14 @@ function sendCoreInfo()
 		$info['session']['classid'] = $_SESSION['classid'];
 	}
 	
+	// Test DB access
+	try {
+		$db = SOSS_DB::getInstance();
+		$info['dbOk'] = true;
+	} catch(SOSS_DB_Exception $e) {
+		$info['dbOk'] = false;
+	}
+	
 	soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Success", $info);
 }
 

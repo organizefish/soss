@@ -20,9 +20,39 @@
     SOFTWARE.
  */
 
-YUI().use('event', function(Y) {
-	Y.Global.on('soss:ready', function(e) {
-		Y.log("login.js: soss version = " + YUI.soss.core.version);
+var config = {
+	debug: true,
+	groups: {
+		soss: {
+			base: 'js/modules/',
+			modules: {
+				soss_core: {path: 'soss-core.js', requires: ['event','console','io-base','json-parse']}
+			}
+		}	
+	}
+};
+
+YUI(config).use('soss_core', function(Y) {
+	Y.log('login.js starting');
+	
+	Y.on('soss:ready', function(e) {
+		Y.log("login.js: recieved soss:ready");
+		
+		// Get core info.
+		Y.io("query.php?q=classes", {
+			on: {
+					success: function(id, resp, args) {	
+						var oData = resp.parsedResponse.Data,
+						select = Y.one("#class-select");
+						select.setContent('<option value="__none__">[Select Class]</option>');
+						for( var i=0 ; i < oData.length ; i++) {
+							select.append('<option value="' + oData[i].id +
+								'">'+ oData[i].name + " -- " +
+								oData[i].term + ", " + oData[i].year + '</option>' );
+						}
+					}
+				}
+		});
 	});
 });
 
