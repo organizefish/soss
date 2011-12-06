@@ -4,6 +4,9 @@
 // Global settings
 ///////////////////////////////////////
 
+// The title displayed at the top of all pages.
+define("SOSS_SITE_TITLE", "SOSS File Submission System");
+
 // Possible terms in the school year
 $SOSS_TERMS = array( "Fall", "Spring", "J-Term", "Summer" );
 // The default password for all new student accounts

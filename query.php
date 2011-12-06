@@ -221,6 +221,8 @@ function sendCoreInfo()
 		$info['dbOk'] = false;
 	}
 	
+	$info['siteTitle'] = SOSS_SITE_TITLE;
+	
 	soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Success", $info);
 }
 

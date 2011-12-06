@@ -36,6 +36,8 @@ YUI.add('soss_core', function(Y, name) {
 		on: {
 				success: function(id, resp, args) {
 					Y.soss.core = resp.parsedResponse.Data;
+					Y.one('title').setContent(Y.soss.core.siteTitle);
+					Y.all('.soss-site-title').setContent(Y.soss.core.siteTitle);
 					Y.fire( 'soss:ready' );
 				}
 			}
