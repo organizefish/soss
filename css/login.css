@@ -1,6 +1,12 @@
 @CHARSET "UTF-8";
-fieldset { width:35em; }
-
+fieldset { margin-left: 20px; width:35em; background: rgb(230,230,230);}
+fieldset h2 { font-size: 120%; margin-left: 1em; }
 .login-fields {  }
-.login-fields li { margin-bottom:0.5em; list-style:none; }
-.login-fields label { display:block; float:left; width: 6.5em; }
+.login-fields li { margin: 0.75em 1.5em 0 0.5em; list-style:none; }
+.login-fields label { display:block; font-weight: bold; width: 6.5em; }
+
+select { width: 100%; font-size: 120%; }
+input[type="text"], input[type="password"] { height: 1.5em; width: 100%; padding: 0.5em; font-size: 120%; }
+
+#login-message { margin-top: 0; text-align: center; display: none; }
+.warning { background: yellow; border: solid black 1px; }

@@ -1,8 +1,6 @@
 
 YUI.add('soss_core', function(Y, name) {
 	
-	// Set up logging
-	
 	// Render the console if we are in debug mode
 	if( YUI.config.debug ) {
 		new Y.Console({ logSource: Y.Global }).render();

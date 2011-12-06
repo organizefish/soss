@@ -20,50 +20,6 @@
     SOFTWARE.
  */
 
-YUI({debug:true}).use('event','console','io-base','json-parse', function(Y) {
-	var GUID = Y.guid();
-	
-	// Render the console if we are in debug mode
-	if( YUI.config.debug ) {
-		new Y.Console({ logSource: Y.Global }).render();
-	}
-	
-	Y.log("soss.js starting up", "info");
-	
-	YUI.namespace("soss.core");  // Holds core information (session, page elements, etc.)
-	
-	// Global IO handlers.  These are intended to take care of stuff that
-	// needs to be done on every IO request.
-	var globalIO = {
-		success: function(id, response, args){
-			try {
-				response.parsedResponse = Y.JSON.parse(response.responseText);
-			}catch(e){
-				alert("JSON parse exception:  "+ response);
-			}
-		},
-		fail: function(id, resp, args ){
-			alert("Oops.. Error contacting server...");
-		}
-	};
-	Y.on("io:success", globalIO.success, Y);
-	Y.on("io:failure", globalIO.fail, Y);
-	
-	// Global events for SOSS
-	Y.Global.publish('soss:ready', {fireOnce: true});
-	
-	// Get core info.
-	Y.io("query.php?q=coreInfo", {
-		on: {
-				success: function(id, resp, args) {
-					YUI.soss.core = resp.parsedResponse.Data;
-					Y.Global.fire( 'soss:ready' );
-				}
-			}
-	});
-});
-
-
 /*
 (function() {
 	

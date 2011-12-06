@@ -95,25 +95,22 @@ class Soss_Authenticate {
 
         $stuRow = $this->getStudentRow($uname, $class);
 
-        if( $stuRow === null ) {
-            soss_send_json_response(SOSS_RESPONSE_SUCCESS,
-                    "Login failed", array("auth" => false));
-        }
-
-        // Authenticate using LDAP or database.
-        if( SOSS_USE_LDAP ) {
-            $result = $this->doLoginLdap($uname, $passwd, $class, $stuRow);
-
-            // Fall back to database if LDAP fails.
-            if( ! $result ) {
-                $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
-            }
-        } else {
-            $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
+        if( $stuRow !== null ) {
+	        // Authenticate using LDAP or database.
+	        if( SOSS_USE_LDAP ) {
+	            $result = $this->doLoginLdap($uname, $passwd, $class, $stuRow);
+	
+	            // Fall back to database if LDAP fails.
+	            if( ! $result ) {
+	                $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
+	            }
+	        } else {
+	            $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
+	        }
         }
 
         // If success, set session variables
-        if( $result ) {
+        if( !empty($result) ) {
             $this->setSession($stuRow);
 
             // Set authentication type.
@@ -125,7 +122,7 @@ class Soss_Authenticate {
                         "Login succeeded", array("auth" => "grader"));
         } else {
             soss_send_json_response(SOSS_RESPONSE_SUCCESS,
-                    "Login failed", array("auth" => false));
+                    "The username or password is incorrect.", array("auth" => false));
         }
     }
 

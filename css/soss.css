@@ -12,9 +12,9 @@ fieldset { border: 1px rgb(120,120,120) solid; padding:0.75em; margin:0.8em 0;}
 
 div.top-bar {
     color: white;
-    background: rgb(80,80,80);
+    background: rgb(100,100,100);
     text-align: right;
-    font-size: 80%;
+    font-size: 90%;
     padding: 0.5em 1em 0.5em 0.5em;
     margin: 0 0.5em 0 0.5em;
 }
@@ -31,4 +31,5 @@ div.top-bar a:hover { color: red; }
 
 table.center { margin:auto; }
 .instructions { font-size:90%; font-style:italic; margin-left:1em; margin-right:1em; text-align:left;}
-.error { color:black; margin:0.8em; padding:0.8em; background:rgb(255,150,150); border:red solid 2px; }
+.error { color:red; }
+.input-error { border: red solid 1px; }
