@@ -20,6 +20,112 @@
     SOFTWARE.
  */
 
+var config = {
+	debug: true,
+	groups: {
+		soss: {
+			base: 'js/modules/',
+			modules: {
+				soss_core: {path: 'soss-core.js', requires: ['event','console','io-base','json-parse','datasource-io','datasource-jsonschema']}
+			}
+		}	
+	}
+};
+
+YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) {
+	
+	var refreshFileInputs = function(e) {
+		var numFileInputs = Y.one('#num-files-select').get('value');
+		
+		var fileInputList = Y.one('#file-input-list');
+		var fileInputs = fileInputList.all('li');
+		
+		if( fileInputs.size() > numFileInputs ){
+			fileInputs.each( function(node, idx, list) {
+				if( idx >= numFileInputs )
+					node.remove(true);
+			});
+		} else {
+			for( var i = 0; i < numFileInputs - fileInputs.size(); i++ ) {
+				fileInputList.append('<li><input type="file" name="userfile[]" /></li>');
+			}
+		}
+	};
+	
+	var beginUpload = function(e) {
+		e.preventDefault();
+		
+		if( Y.one('#assignment-select').get('selectedIndex') == 0 ) {
+			showUploadError("Please select an assignment.");
+			return;
+		}
+	
+		var fileInputs = Y.all('#file-input-list input[type="file"]');
+		var atLeastOne = false, classFile = false, backupFile = false;
+		fileInputs.each( function( node, idx, list ) {
+			var fName = Y.Lang.trim(node.get('value'));
+			if( fName !== "" ) atLeastOne = true;
+			if( fName.match(/\.class$/) ) classFile = true;
+			if( fName.match(/~$/) ) backupFile = true;
+		});
+	
+	    if( classFile ) { Y.log("Submitting class file hook"); return; }
+	    if( backupFile ) { Y.log("Submitting backup file hook"); return; }
+	    if( !atLeastOne ) { showUploadError("Please provide at least one file to upload.");	return; }
+	    
+		doUpload();
+	};
+	
+	var showUploadError = function( message ) 
+	{
+		var messageNode = Y.one('#upload-message');
+		messageNode.addClass('error');
+		messageNode.setContent(message);
+	};
+	
+	var doUpload = function()
+	{
+		Y.one('#upload-button').set('disabled', true);
+		
+	};
+	
+	Y.on("soss:ready", function(e) {
+		// Populate assignment list
+		Y.soss.dataSource.assignments.sendRequest({
+			callback: {
+				success: function(e) {
+					var sel = Y.one('#assignment-select');
+					sel.setContent( '<option value="__none__">[Select Assignment]</option>' );
+					for( var i=0 ; i < e.response.results.length ; i++) {
+						sel.append('<option value="' + e.response.results[i].name +'">'+
+								e.response.results[i].name+ '</option>');
+					}
+				},
+				failure: function(e) {
+					Y.log("Error: " + e.error.message);
+				}
+			}
+		});
+		
+		// Add options for file count
+		var sel = Y.one("#num-files-select");
+		sel.setContent("<option>1</option>");
+		for( var i = 2; i <=10 ;i++ ){
+			sel.append("<option>" + i + "</option>");
+		}
+		refreshFileInputs();
+		sel.on('change', refreshFileInputs);
+		
+		// Place the upload size limits
+		Y.one('#max-file-size').setContent(Y.soss.core.uploadMaxFileSize);
+		Y.one('#max-post-size').setContent(Y.soss.core.postMaxSize);
+		Y.one('#max-file-size-hidden').set('value', Y.soss.core.uploadMaxFileSizeBytes);
+		
+		Y.one('#upload-button').on('click', beginUpload);
+	});
+});
+
+/*
 (function() {
 	
 	var Dom = YAHOO.util.Dom,
@@ -496,4 +602,4 @@
 	
 	YAHOO.soss.fileInputModules = [];
 	Evt.onDOMReady(initUI);
-})();
+})(); */

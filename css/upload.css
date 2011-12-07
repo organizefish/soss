@@ -2,10 +2,20 @@
 
 input.file_input { }
 
-table#upload-form-table { border: solid rgb(165,185,252) 4px; margin-left:1em; }
-#upload-form-module { padding: 0 0.5em 0 0.5em; clear:both;}
+#assignment-select { width: 100%; }
+
+
+#upload-form-container { padding: 0 1em 1em 1em; background: rgb(230,230,230); border: 1px solid rgb(150,150,150);
+	width: 700px; }
+#upload-meta { list-style: none; margin-left:0; }
+#upload-meta li { margin-top: 1.0em; }
+#num-files-select { width: 5em; }
 .upload-button-element { padding:0.5em 0em 0em 1em; }
-.file-size-info { color: rgb(100,30,30); font-style:italic; font-size:85%; }
+.file-size-info { color: rgb(200,30,30); font-style:italic; font-size:95%; }
+
+#file-input-list { list-style: none; border: 1px solid rgb(150,150,150); padding:0; margin:0; }
+#file-input-list li { margin: 0; border-bottom: 1px solid rgb(150,150,150); padding: 10px 5px; }
+#file-input-list li:last-child { border-bottom: none; }
 
 #show-hide-form{width:18px;height:22px;cursor:pointer;float:left;}
 .show-hide-icon-1{background:url(../img/sprite-menu.gif) -8px 2px no-repeat;}
@@ -13,3 +23,4 @@ table#upload-form-table { border: solid rgb(165,185,252) 4px; margin-left:1em; }
 
 .show-hide-icon-2{background:url(../img/sprite-menu.gif) -8px -315px no-repeat;}
 .show-hide-icon-2:hover{background:url(../img/sprite-menu.gif) -8px -395px no-repeat;}
+#upload-button { margin-top: 10px; }

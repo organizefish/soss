@@ -27,9 +27,7 @@ require 'SOSSFilestore.class.php';
 require 'soss_request.php';
 require 'soss_json.php';
 
-
 define("SOSS_FILE_LIST_LIMIT", 30 );
-
 
 // Make sure we are authorized to view this data, this page is really
 // for students and graders only.
@@ -44,26 +42,19 @@ if( empty($query) ) {
 }
 
 
-if( $query == "getSubmissionList" ) {
-	send_submission_list();
-} elseif ( $query == "getFileNames" ) {
-	send_submission_file_names();
-} elseif ( $query == "getUploadInfo" ) {
-	send_upload_info();
-} else {
-	soss_send_json_response(SOSS_RESPONSE_ERROR,"Unrecognized query.");
+switch( $query )
+{
+	case "getSubmissionList":
+		send_submission_list();
+		break;
+	case "getFileNames":
+		send_submission_file_names();
+		break;
+	default:
+		soss_send_json_response(SOSS_RESPONSE_ERROR,"Unrecognized query.");
 }
 
 //////////////////////////////////////////////////////
-
-function send_upload_info() {
-	$info = array(
-		"uploadMaxFileSize" => format_bytes(ini_to_bytes(ini_get('upload_max_filesize') )),
-		"uploadMaxFileSizeBytes" => ini_to_bytes(ini_get('upload_max_filesize') ),
-		"postMaxSize" => format_bytes(ini_to_bytes(ini_get('post_max_size')))
-	);
-	soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Success", $info);
-}
 
 function send_submission_file_names() {
 
@@ -159,29 +150,6 @@ function send_submission_list() {
 
 	} catch( SOSS_DB_Exception $e ) {
 		soss_send_json_response(SOSS_RESPONSE_ERROR, "Database error: ".$e->getMessage());
-	}
-}
-
-// Converts to bytes.
-//
-function ini_to_bytes($val) {
-	$val = trim($val);
-	$last = strtolower($val[strlen($val) - 1]);
-	switch($last) {
-		case 'm':
-			$val *= 1024;
-            // fall through
-		case 'k':
-			$val *= 1024;
-	}
-	return $val;
-}
-
-function format_bytes($val) {
-	if($val > 1024 * 1024) {
-		return sprintf("%.1f MB", ($val / (1024*1024.0)));
-	} else {
-		return sprintf("%d bytes", $val);
 	}
 }
 

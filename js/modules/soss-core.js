@@ -31,6 +31,17 @@ YUI.add('soss_core', function(Y, name) {
 	// Global events for SOSS
 	Y.publish('soss:ready', {fireOnce: true});
 	
+	// Set up data sources
+	Y.namespace("soss.dataSource");
+	Y.soss.dataSource.assignments = new Y.DataSource.IO({source: "query.php?q=assignments"});
+	Y.soss.dataSource.assignments.plug({fn: Y.Plugin.DataSourceJSONSchema, cfg: {
+		schema: {
+			resultListLocator: 'Data',
+			resultFields: ["name", 'ddate']
+		}
+	}});
+	
+	
 	// Get core info.
 	Y.io("query.php?q=coreInfo", {
 		on: {
@@ -42,4 +53,4 @@ YUI.add('soss_core', function(Y, name) {
 				}
 			}
 	});
-}, '2.0.0', { requires: ['event','console','io-base','json-parse'] } );
+}, '2.0.0', { requires: ['event','console','io-base','json-parse', 'datasource-io', 'datasource-jsonschema'] } );

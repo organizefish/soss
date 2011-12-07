@@ -223,6 +223,10 @@ function sendCoreInfo()
 	
 	$info['siteTitle'] = SOSS_SITE_TITLE;
 	
+	$info["uploadMaxFileSize"] = format_bytes(ini_to_bytes(ini_get('upload_max_filesize') ));
+	$info["uploadMaxFileSizeBytes"] = ini_to_bytes(ini_get('upload_max_filesize') );
+	$info["postMaxSize"] = format_bytes(ini_to_bytes(ini_get('post_max_size')));
+	
 	soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Success", $info);
 }
 
@@ -292,5 +296,28 @@ function send_submission_list() {
 	} catch( SOSS_DB_Exception $e ) {
 		soss_send_json_response(SOSS_RESPONSE_ERROR, 
 			"SQL Exception: " . $e->getMessage() );
+	}
+}
+
+// Converts to bytes.
+//
+function ini_to_bytes($val) {
+	$val = trim($val);
+	$last = strtolower($val[strlen($val) - 1]);
+	switch($last) {
+		case 'm':
+			$val *= 1024;
+			// fall through
+		case 'k':
+			$val *= 1024;
+	}
+	return $val;
+}
+
+function format_bytes($val) {
+	if($val > 1024 * 1024) {
+		return sprintf("%.1f MB", ($val / (1024*1024.0)));
+	} else {
+		return sprintf("%d bytes", $val);
 	}
 }

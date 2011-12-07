@@ -9,6 +9,7 @@ body {margin:0;  }
 h1 { margin-left: 1em; }
 .h2style { font-size:123.1%; font-weight:bold; margin:1em 0; }
 fieldset { border: 1px rgb(120,120,120) solid; padding:0.75em; margin:0.8em 0;}
+label { font-weight: bold; display: block; }
 
 #top-bar {
     color: white;
