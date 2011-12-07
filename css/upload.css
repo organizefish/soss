@@ -4,9 +4,8 @@ input.file_input { }
 
 #assignment-select { width: 100%; }
 
-
-#upload-form-container { padding: 0 1em 1em 1em; background: rgb(230,230,230); border: 1px solid rgb(150,150,150);
-	width: 700px; }
+#upload-form-container { padding: 0 1em 1em 1em; background: rgb(240,240,240); border: 1px solid rgb(150,150,150);
+	width: 600px; }
 #upload-meta { list-style: none; margin-left:0; }
 #upload-meta li { margin-top: 1.0em; }
 #num-files-select { width: 5em; }
@@ -24,3 +23,5 @@ input.file_input { }
 .show-hide-icon-2{background:url(../img/sprite-menu.gif) -8px -315px no-repeat;}
 .show-hide-icon-2:hover{background:url(../img/sprite-menu.gif) -8px -395px no-repeat;}
 #upload-button { margin-top: 10px; }
+
+.upload-spinner { padding: 3px 25px 3px 0; background: url(../img/spinner.gif) no-repeat top right; }

@@ -85,8 +85,39 @@ YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) 
 	
 	var doUpload = function()
 	{
-		Y.one('#upload-button').set('disabled', true);
-		
+		var cfg = {
+			method: 'POST',
+			form: {
+				id: 'upload-form',
+				upload: true
+			},
+			on: {
+				start: function(id, args) {
+					Y.one('#upload-button').set('disabled', true);
+					var messageNode = Y.one('#upload-message');
+					messageNode.removeClass('error');
+					messageNode.addClass('upload-spinner');
+					messageNode.setContent('Uploading... ');
+					messageNode.setStyle('display', 'inline');
+				},
+				complete: function(id, resp, args) {
+					Y.one('#upload-button').set('disabled', false);
+					var messageNode = Y.one('#upload-message');
+					messageNode.removeClass('upload-spinner');
+					var mess = resp.parsedResponse.Message;
+					if( resp.parsedResponse.ResponseCode == 200 ) {
+						if( resp.parsedResponse.Data.overwrite ) 
+							mess += " (Previous submission overwritten.)";
+						Y.one('#upload-form').reset();
+					} else {
+						messageNode.addClass('error');
+					}
+					messageNode.setContent( mess );
+				},
+				end: function(id, args) { }
+			}
+		};
+		Y.io('upload.php', cfg);
 	};
 	
 	Y.on("soss:ready", function(e) {
@@ -97,8 +128,7 @@ YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) 
 					var sel = Y.one('#assignment-select');
 					sel.setContent( '<option value="__none__">[Select Assignment]</option>' );
 					for( var i=0 ; i < e.response.results.length ; i++) {
-						sel.append('<option value="' + e.response.results[i].name +'">'+
-								e.response.results[i].name+ '</option>');
+						sel.append('<option>'+ e.response.results[i].name+ '</option>');
 					}
 				},
 				failure: function(e) {

@@ -14,7 +14,7 @@ YUI.add('soss_core', function(Y, name) {
 	// Global IO handlers.  These are intended to take care of stuff that
 	// needs to be done on every IO request.
 	var globalIO = {
-		success: function(id, response, args){
+		complete: function(id, response, args){
 			try {
 				response.parsedResponse = Y.JSON.parse(response.responseText);
 			}catch(e){
@@ -25,7 +25,7 @@ YUI.add('soss_core', function(Y, name) {
 			alert("Oops.. Error contacting server...");
 		}
 	};
-	Y.on("io:success", globalIO.success, Y);
+	Y.on("io:complete", globalIO.complete, Y);
 	Y.on("io:failure", globalIO.fail, Y);
 	
 	// Global events for SOSS
