@@ -32,7 +32,24 @@ var config = {
 	}
 };
 
-YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) {
+YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', 'panel', function(Y) {
+	
+	var showYesNoPanel = function(message, yesHook) {
+		
+		var panel = new Y.Panel( {
+			srcNode: '#yesNoPanel',
+			width: 450,
+			modal: true,
+			bodyContent: message,
+			headerContent: 'Warning',
+			centered: true,
+			buttons: [
+			          {value: "Yes", action: function(e) {e.preventDefault(); panel.hide(); yesHook(); }, section:Y.WidgetStdMod.FOOTER },
+			          {value: "No", action: function(e) {e.preventDefault(); panel.hide(); }, section:Y.WidgetStdMod.FOOTER }
+			          ]
+		});
+		panel.render();
+	};
 	
 	var refreshFileInputs = function(e) {
 		var numFileInputs = Y.one('#num-files-select').get('value');
@@ -69,11 +86,22 @@ YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) 
 			if( fName.match(/~$/) ) backupFile = true;
 		});
 	
-	    if( classFile ) { Y.log("Submitting class file hook"); return; }
-	    if( backupFile ) { Y.log("Submitting backup file hook"); return; }
+	    if( classFile ) {
+	    	showYesNoPanel("<p>You are submitting a Java bytecode file (ending in <code>.class</code>).</p>" +
+				  "<p>For most courses, instructors only want the source code files" +
+				  "(files ending in <code>.java</code>).</p>" +
+				  "<p>Are you sure that you want to submit the bytecode file(s)?</p>", doUpload ); 
+	    	return; 
+	    }
+	    if( backupFile ) { 
+	    	showYesNoPanel("<p>You are submitting an editor's backup file (ending in <code>~</code>).</p>" +
+				  "<p>Some text editors and IDEs create backup files that end in <code>~</code>.  Since a backup file " +
+				  " may not contain the most recent version of your code, you probably don't want to submit this file.</p>" +
+				  "<p>Are you sure that you want to submit the backup file(s)?</p>", doUpload ); 
+	    	return; 
+	    }
 	    if( !atLeastOne ) { showUploadError("Please provide at least one file to upload.");	return; }
-	    
-		doUpload();
+	    doUpload();
 	};
 	
 	var showUploadError = function( message ) 
@@ -108,7 +136,6 @@ YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) 
 					if( resp.parsedResponse.ResponseCode == 200 ) {
 						if( resp.parsedResponse.Data.overwrite ) 
 							mess += " (Previous submission overwritten.)";
-						Y.one('#upload-form').reset();
 					} else {
 						messageNode.addClass('error');
 					}
@@ -152,204 +179,13 @@ YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) 
 		Y.one('#max-file-size-hidden').set('value', Y.soss.core.uploadMaxFileSizeBytes);
 		
 		Y.one('#upload-button').on('click', beginUpload);
+		
+		
 	});
 });
 
 /*
 (function() {
-	
-	var Dom = YAHOO.util.Dom,
-	    Evt = YAHOO.util.Event;
-	
-	var ASSIGNMENT_SELECT_ID = "assignment_select",
-		UPLOAD_FORM_ID = "upload_form",
-		NUM_FILES_SELECT_ID = "num_files_select",
-		MAX_FILE_SIZE_HIDDEN_ID = "max-file-size-hidden",
-		MAX_FILE_SIZE_SPAN_ID = "max-file-size",
-		MAX_POST_SIZE_SPAN_ID = "max-post-size",
-		CHANGE_PASS_DIALOG_ID = "change-student-pass-dialog",
-		CHANGE_PASS_LINK_ID = "change-pass-link",
-		LOGOUT_LINK_ID = "logout-link";
-	
-	var changePassDialog = null;
-	
-	var changePassHandler = function(e) {
-		Evt.preventDefault(e);
-		changePassDialog.show();
-	};
-	
-	var updateAssignmentSelect = function() {
-		var buildSelect = function(oRequest,oParsedResp,oPayload) {
-			var oData= oParsedResp.results;
-			var el = Dom.get(ASSIGNMENT_SELECT_ID);
-			el.innerHTML = '<option value="__none__">[Select Assignment]</option>';
-			for(i=0 ; i < oData.length ; i++) {
-				el.innerHTML += '<option value="' + oData[i].name +
-					'">'+ oData[i].name+ '</option>';
-			}
-		};
-		
-		// Sends a request to the DataSource for data
-		var oCallback = {
-		    success : buildSelect,
-		    failure : function() {alert("Failed to retrieve assignment list.");}
-		};
-		YAHOO.soss.ds.assignmentsDataSource.sendRequest("", oCallback);
-	};
-	
-	var uploadHandler = function(e,form) {
-		// Prevent default submission, we'll do it ourselves
-		YAHOO.util.Event.preventDefault(e);
-	
-		// Check to see that the user has selected an assignment
-		var sel = Dom.get(ASSIGNMENT_SELECT_ID);
-	
-		if( sel.options[sel.selectedIndex].value == "__none__" ) {
-			YAHOO.soss.showErrorDialog("<p>Please select an assignment from the list.</p>",
-					"Missing Assignment");
-			return;
-		}
-	
-		// Check to see if the user is submitting a ".class" file, and
-		// if there are any files at all.
-	    var fileInputs = YAHOO.soss.fileInputModules;
-	    var submittingClassFile = false;
-	    var atLeastOneFile = false;
-	
-	    for( i = 0; i < fileInputs.length; i++ ) {
-	        var f = fileInputs[i];
-	
-			var el = Dom.getFirstChild(f.body);
-	        if( el.type == "file" ) {
-	        	var fName = YAHOO.lang.trim(el.value);
-	            if( fName.match(/\.class$/) ) {
-	                submittingClassFile = true;
-	            }
-	            if( fName.length > 0 ) {
-	            	atLeastOneFile = true;
-	            }
-	        }
-	    }
-	
-	    if( submittingClassFile ) {
-			showBytecodeWarningDialog();
-			return;
-	    } 
-	    
-	    if( !atLeastOneFile ) {
-	    	YAHOO.soss.showErrorDialog("<p>You did not provide any files to upload.</p>",
-	    			"Missing Files");
-	    	return;
-	    }
-	    
-		doUpload();
-	};
-	
-	var doUpload = function() {
-	
-		showUploadingPanel();
-		
-		var callback = {
-			upload: function(o) {
-	
-				YAHOO.soss.uploadingPanel.hide();
-				var result = YAHOO.soss.parseJSON(o.responseText);
-	
-				if( result.ResponseCode < 200 ) {
-					YAHOO.soss.showErrorDialog(
-						"<p>There was a problem uploading your file.</p>" +
-						"<p>Message from the server: " +
-						result.Message + "</p>" +
-						"<p>Fix the problem and try your upload again.</p>", "Upload Error");
-				} else {
-					var message = '<p>' + result.Message + '</p>';
-	
-					if( result.Data.overwrite ) {
-						message += '<p>The previous submission was overwritten.</p>';
-					}
-					showUploadSuccessDialog(message);
-	
-					// This could be improved so that it only updates the rows
-					// that need changing/adding.
-					var callback = {
-						success : YAHOO.soss.submissionTable.onDataReturnReplaceRows,
-						failure : YAHOO.soss.submissionTable.onDataReturnReplaceRows,
-						scope : YAHOO.soss.submissionTable
-					};
-	
-					YAHOO.soss.submissionTable.getDataSource().sendRequest('q=getSubmissionList',callback);
-					
-					// Reset the form
-					var form = Dom.get("upload_form");
-					form.reset();
-					updateFileInputs();
-				}
-			},
-			argument: []
-		};
-	
-		var formObject = Dom.get(UPLOAD_FORM_ID);
-		YAHOO.util.Connect.setForm(formObject,true,true);
-		YAHOO.util.Connect.asyncRequest('POST', 'upload.php', callback);
-	};
-	
-	var showUploadSuccessDialog = function(message) {
-		var dialogid = "upload-success-dialog";
-	
-		var el = Dom.get(dialogid);
-	
-		if( ! el ) {
-			var buttons = [
-				{text:"Ok", handler:function(o){ this.hide(); } , isDefault:true},
-			];
-			YAHOO.soss.uploadSuccessDialog = new YAHOO.widget.SimpleDialog(
-				dialogid,
-				{
-					width:"300px",
-					fixedcenter:true,
-					visible:false,
-					draggable:false,
-					close:false,
-					icon:YAHOO.widget.SimpleDialog.ICON_INFO,
-					constraintoviewport:true,
-					modal:true
-				}
-			);
-	
-			YAHOO.soss.uploadSuccessDialog.setHeader("Upload Succeeded");
-			YAHOO.soss.uploadSuccessDialog.cfg.queueProperty("buttons", buttons);
-			YAHOO.soss.uploadSuccessDialog.render(document.body);
-		}
-		
-		YAHOO.soss.uploadSuccessDialog.cfg.setProperty("text",message);
-		YAHOO.soss.uploadSuccessDialog.show();
-	};
-	
-	var showUploadingPanel = function() {
-		var panelid = "upload-wait-panel";
-	
-		var el = Dom.get(panelid);
-	
-		if( ! el ) {
-			YAHOO.soss.uploadingPanel = new YAHOO.widget.Panel(
-				panelid,
-				{
-					width:"240px",
-					fixedcenter:true,
-					visible:false,
-					draggable:false,
-					close:false,
-					modal:true
-				}
-			);
-			YAHOO.soss.uploadingPanel.setHeader("Uploading, please wait...");
-			YAHOO.soss.uploadingPanel.setBody('<img src="img/rel_interstitial_loading.gif" />');
-			YAHOO.soss.uploadingPanel.render(document.body);
-		}
-	
-		YAHOO.soss.uploadingPanel.show();
-	};
-	
 	var showFilesPopup = function (e, trEl) {
 		var target = e.target;
 		var record = this.getRecord(target);
@@ -394,68 +230,6 @@ YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', function(Y) 
 			argument: [fileid]
 		}
 		, null);
-	};
-	
-	var showBytecodeWarningDialog = function() {
-		var el = Dom.get('bytecode-warning-dialog');
-	
-		if( ! el ) {
-			var buttons = [
-				{text:"Continue", handler:function(o){ this.hide(); doUpload(); } , isDefault:true},
-				{
-					text:"Cancel",
-					handler:function(o) { this.hide(); }
-				}
-			];
-			var message = "<p>You are submitting a Java bytecode file (ending in .class).</p>" +
-						  "<p>For most courses, instructors only want the source code files" +
-						  "(files ending in <tt>.java</tt>).</p>" +
-						  "<p>Are you sure that you want to submit the bytecode file(s)?</p>";
-			YAHOO.soss.bytecodeWarningDialog = new YAHOO.widget.SimpleDialog(
-				"bytecode-warning-dialog",
-				{
-					width:"30em",
-					fixedcenter:true,
-					visible:false,
-					draggable:false,
-					close:false,
-					icon:YAHOO.widget.SimpleDialog.ICON_WARN,
-					constraintoviewport:true,
-					modal:true
-				}
-			);
-			
-			YAHOO.soss.bytecodeWarningDialog.setHeader("Warning: submitting bytecode");
-			YAHOO.soss.bytecodeWarningDialog.setBody(message);
-			YAHOO.soss.bytecodeWarningDialog.cfg.queueProperty("buttons",buttons);
-			YAHOO.soss.bytecodeWarningDialog.render(document.body);
-	
-		}
-	
-		YAHOO.soss.bytecodeWarningDialog.show();
-	};
-	
-	var updateFileInputs = function() {
-		var sel = Dom.get(NUM_FILES_SELECT_ID);
-		var n = sel.options[ sel.selectedIndex ].value;
-		var nModules = YAHOO.soss.fileInputModules.length;
-	
-		if(n != nModules && n > 0 && n <= 10) {
-	
-			if( n > nModules ) {
-				for(i = nModules; i < n; i++) {
-					var newModule = new YAHOO.widget.Module("file-input-module-"+i);
-					newModule.setBody('<input class="file_input" type="file" name="userfile[]" />');
-					newModule.render("file_input_container");
-					YAHOO.soss.fileInputModules.push(newModule);
-				}
-			} else {
-				for(i = nModules - 1; i >= n; i-- ) {
-					var mod = YAHOO.soss.fileInputModules.pop();
-					mod.destroy();
-				}
-			}
-		}
 	};
 	
 	var initUI = function (e) {
