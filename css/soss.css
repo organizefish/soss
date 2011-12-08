@@ -34,8 +34,10 @@ table.center { margin:auto; }
 .instructions { font-size:90%; font-style:italic; margin-left:1em; margin-right:1em; text-align:left;}
 .error { color:red; }
 .input-error { border: red solid 1px; }
+.late { font-weight: bold; color: red; }
 
 #soss-passwd-dialog ul { list-style: none; margin-left: 0; }
 #soss-passwd-dialog li { margin: 0.75em 1.5em 0 0.5em; }
 #soss-passwd-dialog label { display:block; font-weight: bold; }
 #soss-passwd-dialog input { width: 100%; font-size: 120%; height: 1.5em; }
+

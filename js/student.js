@@ -33,7 +33,7 @@ var config = {
 	}
 };
 
-YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe', 'panel','datasource-io', 'datatable',function(Y) {
+YUI(config).use('soss-core', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form', 'io-upload-iframe', 'panel','datasource-io', 'datatable',function(Y) {
 	
 	var yesNoPanel = null;
 	var showYesNoPanel = function(message, yesHook) {
@@ -156,10 +156,27 @@ YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe'
 	
 	var submissionDT = null;
 	var initSubmissionList = function() {
+		var aNameFormatter = function(o) {
+			if( o.rowindex == 0 ) {
+				o.column.thNode.addClass('aname-column');
+			}
+			return o.value;
+		};
+		var rDateFormatter = function(o) {
+			if( o.rowindex >= 0 ) {
+				var rd = Y.DataType.Date.parse(o.record.getValue('rdate'));
+				var dd = Y.DataType.Date.parse(o.record.getValue('ddate'));
+				var d = Y.DataType.Date.format(rd, {format: '%m/%d/%Y %I:%M %p'});
+				if( Y.DataType.Date.isGreater(rd, dd) ) {
+					return '<span class="late">'+d+'</span>';
+				}
+			}
+			return d;
+		};
 		var cols = [
-		            {key:"aname",label:"Assignment Name",width:400},
+		            {key:"aname",label:"Assignment Name", formatter: aNameFormatter },
 		            {key:"ddate",label:"Due Date", formatter: Y.soss.formatter.date },
-		            {key:"rdate",label:"Submission Received", formatter: Y.soss.formatter.date}
+		            {key:"rdate",label:"Submission Received", formatter: rDateFormatter }
 		            ];
 		var source = new Y.DataSource.IO({
             source: "student.php?q=getSubmissionList"
@@ -237,233 +254,9 @@ YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe'
 			});
 		}
 		
-		Y.one('#top-bar-uname').setContent(Y.soss.core.session.uname);
+		Y.all('.uname').setContent(Y.soss.core.session.uname);
 		Y.one('#top-bar-class-name').setContent(Y.soss.core.session.className);
 		Y.one('#soss-version').setContent(Y.soss.core.version);
 		initSubmissionList();
 	});
 });
-
-/*
-(function() {
-	var showFilesPopup = function (e, trEl) {
-		var target = e.target;
-		var record = this.getRecord(target);
-	
-		var fileid = record.getData('id');
-		var assignName = record.getData('aname');
-	
-		// Set the panel's header
-		YAHOO.soss.submissionFilesPanel.setHeader(assignName + " contents: ");
-		// Set body to indicate that the data is being requested
-		YAHOO.soss.submissionFilesPanel.setBody(
-				'Loading <img src="lib/yui/build/assets/skins/sam/ajax-loader.gif" />');
-		// Position the panel to the left of the button
-		YAHOO.soss.submissionFilesPanel.cfg.setProperty("context", [target,"tl","tl"] );
-		// Make the panel visible
-		YAHOO.soss.submissionFilesPanel.show();
-		// Request the data for the panel
-		YAHOO.util.Connect.asyncRequest('GET', "student.php?q=getFileNames&fileid="+fileid,
-		{
-			success: function(o) { 
-				var text = "";
-				var result = YAHOO.soss.parseJSON(o.responseText);
-	
-				if( result.ResponseCode < 200 ) {
-					text = "<div style=\"color:red;\">" + result.Message + "</div>";
-				} else {
-					text = "<div style=\"font-family: courier,monospaced;\">";
-					for( var i = 0; i < result.Data.file_list.length; i++ ) {
-						text += result.Data.file_list[i] + "<br />";
-					}
-					text += "</div>";
-				}
-				YAHOO.soss.submissionFilesPanel.setBody(text);
-			},
-			failure: function(o) {
-				YAHOO.soss.submissionFilesPanel.setBody(
-				"<div style=\"color:red;\">Failed to load data for submission:" +
-					o.responseText + "</div>"
-				);
-			},
-			timeout:10000,
-			argument: [fileid]
-		}
-		, null);
-	};
-	
-	var initUI = function (e) {
-		
-		YAHOO.util.DataSource.Parser['sqlDate'] = YAHOO.soss.myParseSQLDate;
-	
-		var columnDefs = [
-		    {key:"aname", label:"Assignment Name",
-			sortable:true,resizeable:true,width:400},
-		    {key:"ddate", label:"Due Date",
-			formatter:"date",
-			sortable:true,resizeable:true},
-		    {key:"rdate", label:"Submission Received",
-			formatter: 'sossDateFormat',
-			sortable:true,resizeable:true}
-		];
-	
-		var dataSource = new YAHOO.util.XHRDataSource("student.php?");
-		dataSource.responseType = YAHOO.util.XHRDataSource.TYPE_JSON;
-		dataSource.doBeforeParseData = YAHOO.soss.ds.preLoad;
-		
-		dataSource.responseSchema = {
-			resultsList: "Data",
-			fields: [
-				{key:"aname"},
-				{key:"ddate", parser:"sqlDate"},
-				{key:"rdate", parser:"sqlDate"},
-				"id"
-			]
-		};
-	
-		YAHOO.soss.submissionTable = new YAHOO.widget.DataTable(
-			"submission-list-container",
-			columnDefs, 
-			dataSource,
-			{
-				MSG_EMPTY: "No submissions yet.",
-				initialRequest: "q=getSubmissionList",
-				dateOptions:{format:'%m/%d/%Y %I:%M %p'},
-				caption: "Click on a row to see the submitted file name."
-			}
-		);
-	
-		YAHOO.soss.submissionTable.subscribe("rowMouseoverEvent", YAHOO.soss.submissionTable.onEventHighlightRow); 
-		YAHOO.soss.submissionTable.subscribe("rowMouseoutEvent", YAHOO.soss.submissionTable.onEventUnhighlightRow); 
-		YAHOO.soss.submissionTable.subscribe("rowClickEvent", showFilesPopup);
-		
-		YAHOO.soss.submissionFilesPanel = new YAHOO.widget.Panel("submission-files-panel",
-					{
-						width: "320px",
-						constraintoviewport: true,
-						draggable: false,
-						visible: false,
-						modal: false,
-						close: true,
-						underlay:"shadow"
-					}
-				);
-		YAHOO.soss.submissionFilesPanel.setHeader("Submission Contents");
-		YAHOO.soss.submissionFilesPanel.setBody("Loading...");
-		YAHOO.soss.submissionFilesPanel.render(document.body);
-	
-		YAHOO.util.Event.addListener(NUM_FILES_SELECT_ID, "change", updateFileInputs);
-		var uploadButton = new YAHOO.widget.Button("upload-button"); 
-		uploadButton.on("click", uploadHandler);
-		
-		// Modulize the first file input
-		var newModule = new YAHOO.widget.Module("file-input-module-0");
-		YAHOO.soss.fileInputModules.push(newModule);
-		newModule.render();
-		
-		// Modulize the form
-		var formModule = new YAHOO.widget.Module("upload-form-module", {visible:true});
-		formModule.render();
-		YAHOO.util.Event.addListener("show-hide-form","click",
-				function(e) {
-					YAHOO.util.Event.preventDefault(e);
-					if(formModule.cfg.getProperty("visible")) {
-						formModule.hide();
-						Dom.addClass('show-hide-form','show-hide-icon-2');
-						Dom.removeClass('show-hide-form','show-hide-icon-1');
-					} else {
-						formModule.show();
-						Dom.addClass('show-hide-form','show-hide-icon-1');
-						Dom.removeClass('show-hide-form','show-hide-icon-2');
-					}
-				}
-		);
-		
-		// Get max file size info
-		YAHOO.util.Connect.asyncRequest('GET', "student.php?q=getUploadInfo",
-				{
-					success: function(o) { 
-						var result = YAHOO.soss.parseJSON(o.responseText);
-						
-						if( result.ResponseCode == 200 ) {
-							Dom.get(MAX_FILE_SIZE_SPAN_ID).innerHTML = 
-								result.Data.uploadMaxFileSize;
-							Dom.get(MAX_POST_SIZE_SPAN_ID).innerHTML = 
-								result.Data.postMaxSize;
-							Dom.get(MAX_FILE_SIZE_HIDDEN_ID).value = 
-								result.Data.uploadMaxFileSizeBytes;
-						} else {
-							YAHOO.soss.showErrorDialog("" + result.Message);
-						}
-					},
-					failure: function(o) { },
-					timeout:10000
-		
-				}, null );
-		
-		var handleSubmit = function() { this.submit(); };
-		var handleCancel = function() { this.hide(); };
-		
-		// Instantiate the Dialog
-		changePassDialog = new YAHOO.widget.Dialog(
-				CHANGE_PASS_DIALOG_ID, 
-					{ width : "30em",
-					  fixedcenter : true,
-					  visible : false, 
-					  modal: true,
-					  constraintoviewport : true,
-					  draggable: false,
-					  buttons : [ { text:"Change", handler:handleSubmit, isDefault:true },
-								  { text:"Cancel", handler:handleCancel } ]
-					 } );
-		changePassDialog.render();
-		
-		var handleSuccess = function(o) {
-			var result = YAHOO.soss.parseJSON(o.responseText);
-			if( result.ResponseCode != 200 ) {
-				YAHOO.soss.showErrorDialog(result.Message);
-			} else {
-				YAHOO.soss.showInfoDialog("Password successfully changed.");
-			}
-		};
-		
-		var handleFailure = function() {
-			YAHOO.soss.showErrorDialog("Unable to change password (server error).");
-		};
-		
-		changePassDialog.callback = { success: handleSuccess,
-				failure:handleFailure };
-		
-		// Validate the entries in the form to require that both first and last name are entered
-		changePassDialog.validate = function() {
-			var data = this.getData();
-			if (data.student_pass_1 != data.student_pass_2) {
-				YAHOO.soss.showErrorDialog("Passwords don't match.");
-				return false;
-			} else {
-				return true;
-			}
-		};
-		
-		Evt.addListener(CHANGE_PASS_LINK_ID, "click", changePassHandler);
-		Evt.addListener(LOGOUT_LINK_ID, "click", signOff);
-		updateAssignmentSelect();
-	};
-	
-	var signOff = function(e) {
-		Evt.preventDefault(e);
-		var callback = {
-			success: function() {
-				window.open("login.html","_self");
-			},
-			failure: function() { 
-				alert("Failed to contact server.");
-				window.open("login.html","_self");
-			}
-		};
-		YAHOO.util.Connect.asyncRequest('GET', 'auth.php?a=logout', callback);
-	};
-	
-	YAHOO.soss.fileInputModules = [];
-	Evt.onDOMReady(initUI);
-})(); */

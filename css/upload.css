@@ -26,3 +26,4 @@ input.file_input { }
 #upload-button { margin-top: 10px; }
 
 .upload-spinner { padding: 3px 25px 3px 0; background: url(../img/spinner.gif) no-repeat top right; }
+.aname-column { width: 400px; }
