@@ -58,7 +58,7 @@ class Soss_Authenticate {
                 $pass = $row['passwd'];
 
                 // Compare the passwords
-                $attempt = soss_get_request('f_pass', false);
+                $attempt = soss_get_request('pass', false);
 
                 if ($pass != sha1($attempt)) {
                     // Login failed

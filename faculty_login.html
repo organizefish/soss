@@ -2,57 +2,49 @@
 <html>
   <head>
 <!-- PAGE TITLE -->
-    <title>SOSS File Submission System -- Faculty Login</title>
+    <title></title>
 <!-- END PAGE TITLE -->
 
-    <!-- YUI CSS files --> 
- 	<link type="text/css" rel="stylesheet" href="lib/yui/build/reset-fonts-grids/reset-fonts-grids.css" />
-	<link type="text/css" rel="stylesheet" href="lib/yui/build/base/base-min.css" />
+    <!-- YUI CSS files -->
+    <link type="text/css" rel="stylesheet" href="lib/yui/build/cssreset/cssreset-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssbase/cssbase-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssfonts/cssfonts-min.css" />
 	
 	<!-- My CSS -->
 	<link type="text/css" rel="stylesheet" href="css/soss.css" />
 	<link type="text/css" rel="stylesheet" href="css/login.css" />
 
 	<!-- YUI Javascript -->	
-	<script type="text/javascript" src="lib/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-	<script type="text/javascript" src="lib/yui/build/connection/connection-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/json/json-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/container/container-min.js"></script>
+	<script src="lib/yui/build/yui/yui-min.js"></script>
 	
 	<!-- My Javascript -->
 	<script type="text/javascript" src="js/faculty_login.js"></script>
   </head>
-<body class="yui-skin-sam">
+<body class="yui3-skin-sam">
 <div id="doc2">
 	<div id="hd">
-		<div class="top-bar">
-			Faculty Login
+		<div id="top-bar">
+			<span class="soss-site-title"></span> 
+			<div id="top-bar-options">Administrator Sign In</div>
 		</div>
 
 <!-- PAGE TITLE -->
-			<h1>SOSS File Submission System -- Faculty Login</h1>
+			<h1 class="soss-site-title"></h1>
 <!-- END PAGE TITLE -->
 	</div>
 	<div id="bd">
 		<form id="login-form">
-		<fieldset><legend>Login</legend>
-		<div id="error-message" class="error"><div class="bd"></div></div>
+		<fieldset>
+		<h2>Administrator Sign In</h2>
 		<ul class="login-fields">
-			<li><label>Password:</label><input name="f_pass" type="password" /></li>
+			<li><label>Password:</label><input id="pass" name="pass" type="password" /></li>
 		</ul>
-		<input id="submit-button" type="submit" value="Login" />
+		<div id="login-message"></div>
+		<button id="login-button">Login</button>
 		</fieldset>
 		</form>
-            <p style="font-size:90%; margin-top:1.5em;"><a href="login.html">Student login</a></p>
 	</div>
-	<div id="ft">
-<!-- PAGE FOOTER -->
-		<p>Use of this system is restricted to authorized personnel only 
- 		and implies that you have read and understand general university network 
- 		policy. Unauthorized access, or attempts to access this system will be reported 
- 		to appropriate criminal and school authorities.</p>
-<!-- END PAGE FOOTER -->
-	</div>
+	<div id="ft"></div>
 </div>
 </body>
 </html>

@@ -20,61 +20,66 @@
     SOFTWARE.
  */
 
-(function() {
-	
-	var Dom = YAHOO.util.Dom,
-		Evt = YAHOO.util.Event,
-		ERROR_MSG_ID = "error-message",
-		SUBMIT_ID = "submit-button",
-		LOGIN_FORM_ID = "login-form",
-		errorModule = null;
-	
-	var parseJSON = function( text ) {
-		var result = null;
-		
-		try {
-			result = YAHOO.lang.JSON.parse(text);
-		} catch (e) {
-			alert("Failed to parse JSON, contact administrator: " + 
-					text);
-		}
-		
-		// Check for "access denied".   If so, redirect to login.
-		if(result.ResponseCode == 110 ) {
-			window.open("login.html", "_self");
-		}
-		
-		return result;
-	};
-	
-	var doLogin = function() {
-		var checkResponse = function(o) {
-			var result = parseJSON(o.responseText);
-			if( result.ResponseCode == 200 ) {
-				window.open("admin.html", "_self");
-			} else {
-				errorModule.setBody("Login failed: " + result.Message);
-				errorModule.show();
+var config = {
+	debug: true,
+	groups: {
+		soss: {
+			base: 'js/modules/',
+			modules: {
+				'soss-core': {path: 'soss-core.js', requires: ['event','console','io-base','json-parse','datasource-io', 'datasource-jsonschema']}
 			}
-		};
-		var callback = {
-			success: checkResponse,
-			failure: function() { alert("Failed to contact server.");}
-		};
-		YAHOO.util.Connect.setForm(Dom.get(LOGIN_FORM_ID));
-		YAHOO.util.Connect.asyncRequest('POST', 'auth.php?a=faculty', callback);
+		}	
+	}
+};
+
+YUI(config).use('soss-core', 'io-form', function(Y) {
+	Y.log('login.js starting');
+	
+	var clearErrors = function()
+	{
+		Y.one('#pass').removeClass('input-error');
+		var message = Y.one('#login-message');
+		message.setStyle('display', 'none');
+		message.removeClass('error');
 	};
 	
-	var validateLogin = function (e) {
-		Evt.preventDefault(e);
-		doLogin();
+	var showError = function( message )
+	{
+		var messageNode = Y.one('#login-message');
+		messageNode.setContent(message);
+		messageNode.addClass('error');
+		messageNode.setStyle('display', 'block');
 	};
 	
-	var initUI = function() {
-		Evt.addListener(Dom.get(LOGIN_FORM_ID),"submit",validateLogin);
-		errorModule = new YAHOO.widget.Module(ERROR_MSG_ID,{visible:false});
-		errorModule.render();
+	var authenticate = function()
+	{	
+		Y.io('auth.php?a=faculty', {
+			method: 'post',
+			form: {
+				id: 'login-form'
+			},
+			on: {
+				success: function(id,resp,args) {
+					var respCode = resp.parsedResponse.ResponseCode;
+					if( respCode == 200 ) {
+						window.open("admin.html", "_self");
+					} else {
+						showError("<p>"+resp.parsedResponse.Message+"</p>");
+						Y.one('#login-button').set('disabled', false);
+					}
+				}
+			}
+		});
 	};
 	
-	Evt.onDOMReady(initUI);
-})();
+	Y.on('soss:ready', function(e) {
+		// Login button handler
+		Y.one('#login-button').on('click', function(e) {
+			e.preventDefault();
+			clearErrors();
+			Y.one('#login-button').set('disabled', true);
+			authenticate();
+		});
+		
+	});
+});
