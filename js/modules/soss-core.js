@@ -11,6 +11,11 @@ YUI.add('soss-core', function(Y, name) {
 	
 	var GUID = Y.guid();
 	
+	Y.namespace("soss.formatter");
+	Y.soss.formatter.date = function(o) {
+		return Y.DataType.Date.format( Y.DataType.Date.parse(o.value), {format: "%m/%d/%Y %I:%M %p"});
+	};
+	
 	// Global IO handlers.  These are intended to take care of stuff that
 	// needs to be done on every IO request.
 	var globalIO = {
@@ -57,4 +62,4 @@ YUI.add('soss-core', function(Y, name) {
 				}
 			}
 	});
-}, '2.0.0', { requires: ['dump', 'event','console','io-base','json-parse', 'datasource-io', 'datasource-jsonschema'] } );
+}, '2.0.0', { requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse', 'datasource-io', 'datasource-jsonschema'] } );

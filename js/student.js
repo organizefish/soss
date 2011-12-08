@@ -26,14 +26,14 @@ var config = {
 		soss: {
 			base: 'js/modules/',
 			modules: {
-				'soss-core': {path: 'soss-core.js', requires: ['dump', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
+				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
 				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']}
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe', 'panel', function(Y) {
+YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe', 'panel','datasource-io', 'datatable',function(Y) {
 	
 	var yesNoPanel = null;
 	var showYesNoPanel = function(message, yesHook) {
@@ -142,6 +142,7 @@ YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe'
 					if( resp.parsedResponse.ResponseCode == 200 ) {
 						if( resp.parsedResponse.Data.overwrite ) 
 							mess += " (Previous submission overwritten.)";
+						submissionDT.datasource.load();
 					} else {
 						messageNode.addClass('error');
 					}
@@ -151,6 +152,32 @@ YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe'
 			}
 		};
 		Y.io('upload.php', cfg);
+	};
+	
+	var submissionDT = null;
+	var initSubmissionList = function() {
+		var cols = [
+		            {key:"aname",label:"Assignment Name",width:400},
+		            {key:"ddate",label:"Due Date", formatter: Y.soss.formatter.date },
+		            {key:"rdate",label:"Submission Received", formatter: Y.soss.formatter.date}
+		            ];
+		var source = new Y.DataSource.IO({
+            source: "student.php?q=getSubmissionList"
+        }).plug(Y.Plugin.DataSourceJSONSchema, {
+	        schema: {
+	            resultListLocator: "Data",
+	            resultFields: ["aname", "ddate", "rdate"]
+	        }
+	    });
+		submissionDT = new Y.DataTable.Base({
+		    columnset: cols,
+		    summary: "Previous Submissions"
+		});
+		submissionDT.plug(Y.Plugin.DataTableDataSource, {
+		    datasource: source
+		});
+		submissionDT.render("#submission-list-container");
+		submissionDT.datasource.load();
 	};
 	
 	Y.on("soss:ready", function(e) {
@@ -213,7 +240,7 @@ YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe'
 		Y.one('#top-bar-uname').setContent(Y.soss.core.session.uname);
 		Y.one('#top-bar-class-name').setContent(Y.soss.core.session.className);
 		Y.one('#soss-version').setContent(Y.soss.core.version);
-		
+		initSubmissionList();
 	});
 });
 
