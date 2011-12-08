@@ -201,13 +201,19 @@ YUI(config).use('soss_core', 'soss_passwd_dialog', 'io-form', 'io-upload-iframe'
 			});
 		});
 		
-		Y.one('#change-pass-link').on('click', function(e) {
-			e.preventDefault();
-			Y.soss.passwdDialog.show(Y.soss.core.session.uname, true);
-		});
+		if( Y.soss.core.useLdap ) {
+			Y.one('#change-pass-link').setStyle('display', 'none');
+		} else {
+			Y.one('#change-pass-link').on('click', function(e) {
+				e.preventDefault();
+				Y.soss.passwdDialog.show(Y.soss.core.session.uname, true);
+			});
+		}
+		
 		Y.one('#top-bar-uname').setContent(Y.soss.core.session.uname);
 		Y.one('#top-bar-class-name').setContent(Y.soss.core.session.className);
 		Y.one('#soss-version').setContent(Y.soss.core.version);
+		
 	});
 });
 
