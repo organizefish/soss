@@ -107,7 +107,7 @@ function change_student_pass() {
 		$err_str = "";
 		$db = SOSS_DB::getInstance();
 	
-		$old_pass = soss_get_request('old_pass', false);
+		$old_pass = soss_get_request('curr_pass', false);
 		$query = "SELECT passwd FROM %s WHERE passwd='%s' AND";
 		$query .= " username='%s' AND class_id='%s'";
 		$query = sprintf( $query,
@@ -117,8 +117,8 @@ function change_student_pass() {
 			$db->dbclean( $_SESSION['classid'] ) );
 		$result = $db->query($query);
    
-		$new_pass_1 = soss_get_request('student_pass_1', false);
-		$new_pass_2 = soss_get_request('student_pass_2', false);
+		$new_pass_1 = soss_get_request('new_pass_1', false);
+		$new_pass_2 = soss_get_request('new_pass_2', false);
 		if( mysql_num_rows($result) != 1 ) {
 			$err_str = "Incorrect password, try again.";
 		} elseif ( $new_pass_1 != $new_pass_2 ) {

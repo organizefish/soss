@@ -26,29 +26,35 @@ var config = {
 		soss: {
 			base: 'js/modules/',
 			modules: {
-				soss_core: {path: 'soss-core.js', requires: ['event','console','io-base','json-parse','datasource-io','datasource-jsonschema']}
+				soss_core: {path: 'soss-core.js', requires: ['dump', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
+				soss_passwd_dialog: {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']}
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', 'panel', function(Y) {
+YUI(config).use('soss_core', 'soss_passwd_dialog', 'io-form', 'io-upload-iframe', 'panel', function(Y) {
 	
+	var yesNoPanel = null;
 	var showYesNoPanel = function(message, yesHook) {
-		
-		var panel = new Y.Panel( {
-			srcNode: '#yesNoPanel',
-			width: 450,
-			modal: true,
-			bodyContent: message,
-			headerContent: 'Warning',
-			centered: true,
-			buttons: [
-			          {value: "Yes", action: function(e) {e.preventDefault(); panel.hide(); yesHook(); }, section:Y.WidgetStdMod.FOOTER },
-			          {value: "No", action: function(e) {e.preventDefault(); panel.hide(); }, section:Y.WidgetStdMod.FOOTER }
-			          ]
-		});
-		panel.render();
+		// Lazy creation of the panel
+		if( yesNoPanel == null ) {
+			yesNoPanel = new Y.Panel( {
+				srcNode: '#yesNoPanel',
+				width: 450,
+				modal: true,
+				headerContent: 'Warning',
+				centered: true,
+				render: true,
+				visible: false,
+				buttons: [
+				          {value: "Yes", action: function(e) {e.preventDefault(); yesNoPanel.hide(); yesHook(); }, section:Y.WidgetStdMod.FOOTER },
+				          {value: "No", action: function(e) {e.preventDefault(); yesNoPanel.hide(); }, section:Y.WidgetStdMod.FOOTER }
+				          ]
+			});
+		}
+		yesNoPanel.setStdModContent(Y.WidgetStdMod.BODY, message);
+		yesNoPanel.show();
 	};
 	
 	var refreshFileInputs = function(e) {
@@ -180,7 +186,28 @@ YUI(config).use('soss_core', 'dump', 'io-form', 'io-upload-iframe', 'panel', fun
 		
 		Y.one('#upload-button').on('click', beginUpload);
 		
+		Y.one('#logout-link').on('click', function(e) {
+			e.preventDefault();
+			Y.io("auth.php?a=logout", {
+				on: {
+					success: function() {
+						window.open("login.html","_self");
+					},
+					failure: function() { 
+						alert("Failed to contact server.");
+						window.open("login.html","_self");
+					}
+				}
+			});
+		});
 		
+		Y.one('#change-pass-link').on('click', function(e) {
+			e.preventDefault();
+			Y.soss.passwdDialog.show(Y.soss.core.session.uname, true);
+		});
+		Y.one('#top-bar-uname').setContent(Y.soss.core.session.uname);
+		Y.one('#top-bar-class-name').setContent(Y.soss.core.session.className);
+		Y.one('#soss-version').setContent(Y.soss.core.version);
 	});
 });
 

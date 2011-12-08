@@ -3,6 +3,7 @@
 input.file_input { }
 
 #assignment-select { width: 100%; }
+#upload-form-container {margin-top: 1em;}
 
 #upload-form-container { padding: 0 1em 1em 1em; background: rgb(240,240,240); border: 1px solid rgb(150,150,150);
 	width: 600px; }

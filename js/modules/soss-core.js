@@ -17,8 +17,12 @@ YUI.add('soss_core', function(Y, name) {
 		complete: function(id, response, args){
 			try {
 				response.parsedResponse = Y.JSON.parse(response.responseText);
+				// Permission denied error reverts to login page
+				if( response.parsedResponse.ResponseCode == 110 ) {
+					window.open('login.html', '_self');
+				}
 			}catch(e){
-				alert("JSON parse exception:  "+ response);
+				alert("JSON parse exception:  " + Y.dump(e));
 			}
 		},
 		fail: function(id, resp, args ){
@@ -53,4 +57,4 @@ YUI.add('soss_core', function(Y, name) {
 				}
 			}
 	});
-}, '2.0.0', { requires: ['event','console','io-base','json-parse', 'datasource-io', 'datasource-jsonschema'] } );
+}, '2.0.0', { requires: ['dump', 'event','console','io-base','json-parse', 'datasource-io', 'datasource-jsonschema'] } );

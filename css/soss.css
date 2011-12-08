@@ -18,8 +18,8 @@ label { font-weight: bold; display: block; }
     padding: 0.5em 1em 0.5em 0.5em;
     margin: 0 0.5em 0 0.5em;
 }
-#top-bar a { color: white; }
-#top-bar a:hover { color: red; }
+#top-bar a { color: white; margin-left: 7px; }
+#top-bar a:hover { color: red;  }
 #top-bar-options { float: right; }
 
 .late-submission { background:rgb(255,155,155); color:black; }
@@ -34,3 +34,8 @@ table.center { margin:auto; }
 .instructions { font-size:90%; font-style:italic; margin-left:1em; margin-right:1em; text-align:left;}
 .error { color:red; }
 .input-error { border: red solid 1px; }
+
+#soss-passwd-dialog ul { list-style: none; margin-left: 0; }
+#soss-passwd-dialog li { margin: 0.75em 1.5em 0 0.5em; }
+#soss-passwd-dialog label { display:block; font-weight: bold; }
+#soss-passwd-dialog input { width: 100%; font-size: 120%; height: 1.5em; }

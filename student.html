@@ -30,14 +30,11 @@
 			<div id="top-bar">
 				<span class="soss-site-title"></span>
                 <div id="top-bar-options">
-                <span id="header-username"></span>
+                <span id="top-bar-class-name"></span> (<span id="top-bar-uname"></span>)
                 <a id="change-pass-link" href="#">Change&nbsp;Password</a>
 				<a id="logout-link" href="#" >Sign Off</a>
 				</div>
 			</div>
-<!-- PAGE TITLE -->
-			<h1><span id="user-class-name"></span></h1>
-<!-- END PAGE TITLE -->
 		</div>
 		
 		<div id="bd">
@@ -72,10 +69,8 @@
 		<div id="submitted-files-container">
 			<h2>Submitted Files</h2>
 			<div id="submission-list-container"></div>
-		</div>
-		
+		</div>		
 		</div><!-- #bd -->
-		
 
 		<div id="ft">
 <!-- PAGE FOOTER -->
@@ -86,28 +81,7 @@
 <!-- END PAGE FOOTER --> 		
  		<p>SOSS version: <span id="soss-version"></span></p>
 		</div>
-	</div>
-	
-	<div id="change-student-pass-dialog">
-		<div class="hd">Change Password</div>
-		<div class="bd">
-		<form method="post" action="update.php?a=studentPass">
-		<table class="no-border center">
-			<tr><td><label for="old_pass">Current Password:</label></td>
-			<td><input type="password" name="old_pass" /></td></tr>
-			<tr><td><label for="student_pass_1">New Password:</label></td>
-			<td><input type="password" name="student_pass_1" /></td></tr>
-			<tr><td><label for="student_pass_2">New Password (again):</label></td>
-			<td><input type="password" name="student_pass_2" /></td></tr>
-		</table>
-		</form>
-		<div class="instructions">
-<!-- PASSWORD WARNING (text will be displayed in password change dialog) -->
-		<p></p>
-<!-- END PASSWORD WARNING -->
-		</div>
-		</div>
-	</div>
+	</div><!-- #doc2 -->
 	
 	</body>
 </html>
