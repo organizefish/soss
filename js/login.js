@@ -26,13 +26,13 @@ var config = {
 		soss: {
 			base: 'js/modules/',
 			modules: {
-				soss_core: {path: 'soss-core.js', requires: ['event','console','io-base','json-parse','datasource-io', 'datasource-jsonschema']}
+				'soss-core': {path: 'soss-core.js', requires: ['event','console','io-base','json-parse','datasource-io', 'datasource-jsonschema']}
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss_core', 'io-form', function(Y) {
+YUI(config).use('soss-core', 'io-form', function(Y) {
 	Y.log('login.js starting');
 	
 	var clearErrors = function()

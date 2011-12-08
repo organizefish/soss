@@ -1,4 +1,4 @@
-YUI.add('soss_passwd_dialog', function(Y, name) {
+YUI.add('soss-passwd-dialog', function(Y, name) {
 	
 	Y.namespace('soss.passwdDialog');
 	Y.soss.passwdDialog.dialog = null;

@@ -1,5 +1,5 @@
 
-YUI.add('soss_core', function(Y, name) {
+YUI.add('soss-core', function(Y, name) {
 	
 	// Render the console if we are in debug mode
 	if( YUI.config.debug ) {

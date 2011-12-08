@@ -26,14 +26,14 @@ var config = {
 		soss: {
 			base: 'js/modules/',
 			modules: {
-				soss_core: {path: 'soss-core.js', requires: ['dump', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
-				soss_passwd_dialog: {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']}
+				'soss-core': {path: 'soss-core.js', requires: ['dump', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
+				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']}
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss_core', 'soss_passwd_dialog', 'io-form', 'io-upload-iframe', 'panel', function(Y) {
+YUI(config).use('soss-core', 'soss-passwd-dialog', 'io-form', 'io-upload-iframe', 'panel', function(Y) {
 	
 	var yesNoPanel = null;
 	var showYesNoPanel = function(message, yesHook) {
