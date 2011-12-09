@@ -27,7 +27,7 @@ YUI.add('soss-core', function(Y, name) {
 					window.open('login.html', '_self');
 				}
 			}catch(e){
-				alert("JSON parse exception:  " + Y.dump(e));
+				alert("JSON parse exception:  " + Y.dump(e) + Y.dump(response.responseText));
 			}
 		},
 		fail: function(id, resp, args ){

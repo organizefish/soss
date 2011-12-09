@@ -11,6 +11,8 @@ define("SOSS_SITE_TITLE", "SOSS File Submission System");
 $SOSS_TERMS = array( "Fall", "Spring", "J-Term", "Summer" );
 // The default password for all new student accounts
 define("SOSS_DEFAULT_PASS", "turnin");
+// The username for the administrator account
+define("SOSS_ADMIN_UNAME", "faculty");
  
 ////////////////////////////////////////////
 // Database settings

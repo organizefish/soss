@@ -31,56 +31,18 @@ $target = soss_get_request('a');
 
 $obj = new Soss_Authenticate();
 
-if ($target == "login") {
-    $obj->doLogin();
-} elseif ($target == "logout") {
-    $obj->doLogout();
-} elseif ($target == "faculty") {
-    $obj->doFacultyLogin();
-} else {
-    soss_send_json_response(SOSS_RESPONSE_ERROR, "Unrecognized query.");
+switch( $target ) {
+	case "login":
+		$obj->doLogin();
+		break;
+	case "logout":
+		$obj->doLogout();
+		break;
+	default:
+		soss_send_json_response(SOSS_RESPONSE_ERROR, "Unrecognized query.");
 }
 
 class Soss_Authenticate {
-
-    public function doFacultyLogin() {
-        try {
-            $db = SOSS_DB::getInstance();
-
-            // Get the password from the faculty table.
-            $sql = "SELECT passwd FROM %s";
-            $sql = sprintf($sql, SOSS_DB::$FACULTY_TABLE);
-
-            $result = $db->query($sql);
-
-            if (mysql_num_rows($result) > 0) {
-                $row = $db->fetch_row($result);
-                $pass = $row['passwd'];
-
-                // Compare the passwords
-                $attempt = soss_get_request('pass', false);
-
-                if ($pass != sha1($attempt)) {
-                    // Login failed
-                    soss_send_json_response(SOSS_RESPONSE_ERROR,
-                            "Incorrect password");
-                } else {
-                    // Successful login, set the session variables
-                    $_SESSION['auth'] = AUTH_FACULTY;
-                    $_SESSION['classid'] = -1;
-                    $_SESSION['class_name'] = "None";
-
-                    soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Login Succeeded");
-                }
-            } else {
-                soss_send_json_response(SOSS_RESPONSE_ERROR,
-                        "The faculty password has not been set. Please see documentation.");
-            }
-        } catch (SOSS_DB_Exception $e) {
-            soss_send_json_response(SOSS_RESPONSE_ERROR,
-                    "DB_Exception: " . $e->getMessage());
-        }
-    }
 
     public function doLogin() {
 
@@ -92,38 +54,113 @@ class Soss_Authenticate {
             soss_send_json_response(SOSS_RESPONSE_ERROR,
                     "Missing required data.");
         }
-
-        $stuRow = $this->getStudentRow($uname, $class);
-
-        if( $stuRow !== null ) {
-	        // Authenticate using LDAP or database.
-	        if( SOSS_USE_LDAP ) {
-	            $result = $this->doLoginLdap($uname, $passwd, $class, $stuRow);
+        
+        // Get class details (if available)
+        $classInfo = $this->getClassInfo($class);
+        
+        $result = false;
+        
+        // If we're authenticating the admin user, do so.
+        if( $uname === SOSS_ADMIN_UNAME ) {
+        	$result = $this->doAdminLogin();
+        	
+        	if( $result === true ) {
+        		
+        		// Set admin session variables
+        		$_SESSION['auth'] = AUTH_FACULTY;
+        		$_SESSION['uname'] = $uname;
+        		
+        		if( $classInfo !== false ) {
+        			$_SESSION['classid'] = $classInfo['id'];
+        			$_SESSION['class_name'] = $classInfo['name'];
+        		} else {
+        			$_SESSION['classid'] = -1;
+        			$_SESSION['class_name'] = "No class selected";
+        		}
+        		soss_send_json_response(SOSS_RESPONSE_SUCCESS,
+        			     "Login succeeded", array("auth" => "admin") );
+        	}
+        	
+        } else {
+        	
+	        // We're authenticating a student, make sure they've chosen a class
+	        if( empty($classInfo) ) {
+	        	soss_send_json_response(SOSS_RESPONSE_ERROR,
+	        	             "Please select a class.", array("auth" => false));
+	        }
+	        
+	        // Get the student's information
+	        $stuRow = $this->getStudentRow($uname, $class);
 	
-	            // Fall back to database if LDAP fails.
-	            if( ! $result ) {
-	                $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
-	            }
-	        } else {
-	            $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
+	        if( $stuRow !== null ) {
+		        // Authenticate using LDAP or database.
+		        if( SOSS_USE_LDAP ) {
+		            $result = $this->doLoginLdap($uname, $passwd, $class, $stuRow);
+		
+		            // Fall back to database if LDAP fails.
+		            if( ! $result ) {
+		                $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
+		            }
+		        } else {
+		            $result = $this->doLoginDb($uname, $passwd, $class, $stuRow);
+		        }
+	        }
+	        
+	        // If success, set session variables
+	        if( true === $result ) {
+	        	// Set authentication type.
+	        	if ($stuRow['grader_priv'] == "Y") {
+	        		$_SESSION['auth'] = AUTH_GRADER;
+	        	} else {
+	        		$_SESSION['auth'] = AUTH_STUDENT;
+	        	}
+	        	
+	        	$_SESSION['classid'] = $classInfo['id'];
+	        	$_SESSION['class_name'] = $classInfo['name'];
+	        	
+	        	if( $_SESSION['auth'] == AUTH_GRADER )
+	        		soss_send_json_response(SOSS_RESPONSE_SUCCESS,
+	                                "Login succeeded", array("auth" => "grader"));
+	        	elseif( $_SESSION['auth'] == AUTH_STUDENT )
+	        		soss_send_json_response(SOSS_RESPONSE_SUCCESS,
+                                	"Login succeeded", array("auth" => "student"));
 	        }
         }
 
-        // If success, set session variables
-        if( !empty($result) ) {
-            $this->setSession($stuRow);
-
-            // Set authentication type.
-            if ($_SESSION['auth'] == AUTH_STUDENT)
-                soss_send_json_response(SOSS_RESPONSE_SUCCESS,
-                        "Login succeeded", array("auth" => "student"));
-            elseif ($_SESSION['auth'] == AUTH_GRADER)
-                soss_send_json_response(SOSS_RESPONSE_SUCCESS,
-                        "Login succeeded", array("auth" => "grader"));
-        } else {
-            soss_send_json_response(SOSS_RESPONSE_SUCCESS,
-                    "The username or password is incorrect.", array("auth" => false));
-        }
+       soss_send_json_response(SOSS_RESPONSE_ERROR,
+                    "Login failed: The username or password is incorrect.", array("auth" => false));
+    }
+    
+    public function doAdminLogin() {
+    	try {
+    		$db = SOSS_DB::getInstance();
+    
+    		// Get the password from the faculty table.
+    		$sql = "SELECT passwd FROM %s";
+    		$sql = sprintf($sql, SOSS_DB::$FACULTY_TABLE);
+    
+    		$result = $db->query($sql);
+    
+    		if (mysql_num_rows($result) > 0) {
+    			$row = $db->fetch_row($result);
+    			$pass = $row['passwd'];
+    
+    			// Compare the passwords
+    			$attempt = soss_get_request('pass', false);
+    
+    			if ($pass != sha1($attempt)) {
+    				// Login failed
+    				return false;
+    			} else {
+    				return true;
+    			}
+    		} else {
+    			soss_send_json_response(SOSS_RESPONSE_ERROR,
+                            "The admin password has not been set. Please see documentation.");
+    		}
+    	} catch (SOSS_DB_Exception $e) {
+    		soss_send_json_response(SOSS_RESPONSE_ERROR, "DB_Exception: " . $e->getMessage());
+    	}
     }
 
     private function doLoginLdap($uname, $pass, $class, $stuRow) {
@@ -156,36 +193,37 @@ class Soss_Authenticate {
                 "Logout successful.");
     }
 
-    private function setSession( $row ) {
-        try {
-            $db = SOSS_DB::getInstance();
-
-            if ($row['grader_priv'] == "Y") {
-                $_SESSION['auth'] = AUTH_GRADER;
-            } else {
-                $_SESSION['auth'] = AUTH_STUDENT;
-            }
-            $_SESSION['uname'] = $row['username'];
-            $_SESSION['classid'] = $row['class_id'];
-
-            $sql = "SELECT name, term, theyear FROM %s ";
-            $sql .="WHERE class_id='%s'";
-
-            $sql = sprintf($sql,
-                            SOSS_DB::$CLASS_TABLE,
-                            $db->dbclean($_SESSION['classid']));
-
-            $result = $db->query($sql);
-            $row = $db->fetch_row($result);
-            $class_name = $row['name'];
-            $class_name .= ", " . $row['term'] . " " . $row['theyear'];
-
-            $_SESSION['class_name'] = $class_name;
-        } catch (SOSS_DB_Exception $e) {
-            soss_send_json_response(SOSS_RESPONSE_ERROR,
-                    "SQL Exception: " . $e->getMessage());
-        }
-
+    private function getClassInfo( $id )
+    {
+    	try {
+    		$db = SOSS_DB::getInstance();
+    	
+    		$sql = "SELECT name, term, theyear FROM %s ";
+    		$sql .="WHERE class_id='%s'";
+    	
+    		$sql = sprintf($sql,
+    			SOSS_DB::$CLASS_TABLE,
+    			$db->dbclean($id));
+    	
+    		$result = $db->query($sql);
+    		if( mysql_num_rows($result) > 0 ) {
+    			$row = $db->fetch_row($result);
+    		} else {
+    			return false;
+    		}
+    		
+    		return array(
+    			'id' => $id,
+    			'name' => $row['name'],
+    			'term' => $row['term'],
+    			'year' => $row['theyear'],
+    			'class_name' => $row['name'] . ", " . $row['term'] . " " . $row['theyear']
+    		);
+			
+    	} catch (SOSS_DB_Exception $e) {
+    		soss_send_json_response(SOSS_RESPONSE_ERROR,
+    	                    "SQL Exception: " . $e->getMessage());
+    	}
     }
     
     private function getStudentRow( $uname, $class ) {
@@ -214,5 +252,4 @@ class Soss_Authenticate {
                     "SQL Exception: " . $e->getMessage());
         }
     }
-
 }

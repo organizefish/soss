@@ -65,21 +65,18 @@ YUI(config).use('soss-core', 'io-form', function(Y) {
 					var data = resp.parsedResponse.Data;
 					var respCode = resp.parsedResponse.ResponseCode;
 					if( respCode == 200 ) {
-						if( false === data.auth ) {
-							showError("<p>" + resp.parsedResponse.Message + "</p>");
-							Y.one('#login-button').set('disabled', false);
-						} else if( data.auth === "student") {
-							Y.log("Authenticated student");
+						if( data.auth === "student") {
 							// Go to the student UI
 							window.open("student.html", "_self");
 						} else if ( data.auth === "grader") {
-							Y.log("Authenticated grader");
 							// Go to the grader UI
 							window.open("grader.html", "_self");
-						} 
+						} else if( data.auth === "admin" ) {
+							// Admin UI
+							window.open("admin.html", "_self");
+						}
 					} else {
-						Y.log("Response code = " + Y.dump(resp));
-						showError("<p>Unrecognized server response</p>");
+						showError(resp.parsedResponse.Message);
 						Y.one('#login-button').set('disabled', false);
 					}
 				}
@@ -110,15 +107,6 @@ YUI(config).use('soss-core', 'io-form', function(Y) {
 		Y.one('#login-button').on('click', function(e) {
 			e.preventDefault();
 			clearErrors();
-			
-			// Check to see that the user has selected an assignment
-			var sel = Y.one('#class-select');
-		
-			if( sel.get('selectedIndex') == 0) {
-				Y.one('#class-select').addClass('input-error');
-				showError("<p>Please select a class from the list.</p>");
-				return;
-			}
 			
 			if( Y.Lang.trim(Y.one("#uname").get('value')) === "" ) {
 				Y.one('#uname').addClass('input-error');

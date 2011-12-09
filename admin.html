@@ -6,51 +6,35 @@
 <!-- END PAGE TITLE -->
 
     <!-- YUI CSS files --> 
- 	<link type="text/css" rel="stylesheet" href="lib/yui/build/reset-fonts-grids/reset-fonts-grids.css" />
-	<link type="text/css" rel="stylesheet" href="lib/yui/build/base/base-min.css" />
-    <link type="text/css" rel="stylesheet" href="lib/yui/build/tabview/assets/skins/sam/tabview.css" />
-    <link rel="stylesheet" type="text/css" href="lib/yui/build/button/assets/skins/sam/button.css" />
-	<link type="text/css" rel="stylesheet" href="lib/yui/build/datatable/assets/skins/sam/datatable.css" />
-	<link type="text/css" rel="stylesheet" href="lib/yui/build/calendar/assets/skins/sam/calendar.css" />
-	<link rel="stylesheet" type="text/css" href="lib/yui/build/container/assets/skins/sam/container.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssreset/cssreset-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssbase/cssbase-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssfonts/cssfonts-min.css" />
 	
 	<!-- My CSS -->
 	<link type="text/css" rel="stylesheet" href="css/soss.css" />
 	<link type="text/css" rel="stylesheet" href="css/admin.css" />
 
-	<!-- YUI Javascript -->	
-	<script type="text/javascript" src="lib/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-	<script type="text/javascript" src="lib/yui/build/element/element-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/tabview/tabview-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/datasource/datasource-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/resize/resize-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/json/json-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/button/button-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/connection/connection-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/get/get-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/dragdrop/dragdrop-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/calendar/calendar-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/datatable/datatable-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/container/container-min.js"></script>
+	<!-- YUI -->
+	<script src="lib/yui/build/yui/yui-min.js"></script>
 	
 	<!-- My Javascript -->
-	<script type="text/javascript" src="js/soss.js"></script>
 	<script type="text/javascript" src="js/admin.js"></script>
-	<script type="text/javascript" src="js/download.js"></script>
-	<script type="text/javascript" src="js/assignments.js"></script>
-	<script type="text/javascript" src="js/classes.js"></script>
-	<script type="text/javascript" src="js/students.js"></script>
   </head>
-<body class="yui-skin-sam">
+<body class="yui3-skin-sam">
 	<div id="doc2">
 		<div id="hd">
-			<div class="top-bar">
-				<span id="header-username"></span>
-				<a id="change-class-link" href="#">Change Class</a>&nbsp;|&nbsp;<a id="logout-link" href="#" >Sign Off</a>&nbsp;|&nbsp;<a id="change-pass-link" href="#">Change&nbsp;Password</a>
+			<div id="top-bar">
+				<span class="soss-site-title">SOSS</span>
+                <div id="top-bar-options">
+                <span id="top-bar-class-name" class="class-name"></span> (Admin)
+                <a id="change-class-link" href="#">Change&nbsp;Class</a>
+                <a id="change-pass-link" href="#">Change&nbsp;Password</a>
+				<a id="logout-link" href="#" >Sign Off</a>
+				</div>
 			</div>
 
 <!-- PAGE TITLE -->
-			<h1>SOSS File Submission System -- <span id="user-class-name"></span></h1>
+			<h1><span class="soss-site-title">SOSS</span> -- <span class="class-name"></span></h1>
 <!-- END PAGE TITLE -->
 			
 		</div>
@@ -126,13 +110,7 @@
 			</div>
 		</div>
 		
-		<div id="ft">
-<!-- PAGE FOOTER -->
-		<p>Use of this system is restricted to authorized personnel only 
- 		and implies that you have read and understand general university network 
- 		policy. Unauthorized access, or attempts to access this system will be reported 
- 		to appropriate criminal and school authorities.</p>
-<!-- END PAGE FOOTER --> 		
+		<div id="ft">	
  		<p>SOSS version: <span id="soss-version"></span></p>
 		</div>
 	</div>

@@ -20,6 +20,29 @@
     SOFTWARE.
  */
 
+var config = {
+	debug: true,
+	groups: {
+		soss: {
+			base: 'js/modules/',
+			modules: {
+				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
+				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']}
+			}
+		}	
+	}
+};
+
+YUI(config).use('soss-core', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
+
+	Y.on("soss:ready", function(e) {
+		Y.one('#soss-version').setContent(Y.soss.core.version);
+		Y.all('.class-name').setContent(Y.soss.core.session.className);
+	});
+	
+});
+
+/*
 (function() {
 	
 	var Dom = YAHOO.util.Dom,
@@ -226,4 +249,4 @@
 	
 	Evt.onDOMReady(initUI);
 	YAHOO.soss.event.onDataReady.subscribe(checkClassID);
-})();
+})();*/
