@@ -35,8 +35,34 @@ var config = {
 
 YUI(config).use('soss-core', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
 
+	var adminTabView;
+	
+	// Class has been changed server-side, update UI
+	var changeClassUI = function(id, name) {
+		Y.soss.core.session.classid = id;
+		Y.soss.core.session.className = name;
+		Y.all('.class-name').setContent(Y.soss.core.session.className);
+	};
+	
 	var changeClass = function(e) {
-		
+		var selectedId = e.target.get('value');
+		if( selectedId < 0 ) {
+			changeClassUI(-1,"No class selected.");
+		} else {
+			var cfg = {
+					method: 'GET',
+					on: {
+						success: function(id, resp, args) {
+							var r = resp.parsedResponse;
+							if( resp.parsedResponse.ResponseCode == 200 ) {
+								changeClassUI(r.Data.classid,r.Data.class_name);
+							}
+						}
+					}
+				};
+			var url = 'setclass.php?id=' + encodeURIComponent(selectedId);
+			Y.io(url, cfg);
+		}
 	};
 	
 	var updateClassList = function(e) {
@@ -46,32 +72,43 @@ YUI(config).use('soss-core', 'tabview', 'soss-passwd-dialog', 'datatype-date-mat
 		
 		var buildSelect = function(id,resp,args) {
 			var oData= resp.parsedResponse.Data;
-			select.setContent( '<option value="__none__">[Select Class]</option>' );
+			select.setContent( '<option value="-1">[Select Class]</option>' );
 			for( var i=0 ; i < oData.length ; i++) {
 				select.append( '<option value="' + oData[i].id +
 					'">'+ oData[i].name + " -- " +
 					oData[i].term + ", " + oData[i].year + '</option>');
+			}
+			if( Y.soss.core.session.classid < 0 ) {
+				select.set('selectedIndex', 0);
+			} else {
+				select.all('option').each( function(node, idx, list) {
+					var id = node.get('value');
+					if( id == Y.soss.core.session.classid ) {
+						select.set('selectedIndex', idx);
+					}
+				});
 			}
 		};
 		
 		var callback = { success : buildSelect };
 		
 		var url = "query.php?q=classes";
-		if(cbox.checked) query += "&includeInactive=1";
+		if(cbox.get('checked')) url += "&includeInactive=1";
 		Y.io( url, { on: callback } );
 	};
 	
 	Y.on("soss:ready", function(e) {
 		Y.one('#soss-version').setContent(Y.soss.core.version);
-		Y.all('.class-name').setContent(Y.soss.core.session.className);
 		
-		var tabview = new Y.TabView({
+		adminTabView = new Y.TabView({
 			srcNode: '#soss-admin-tabs-container'
 		}).render();
 		
 		updateClassList();
 		Y.one('#inactive-class-checkbox').on('change', updateClassList);
 		Y.one('#change-class-select').on('change', changeClass);
+		Y.all('.class-name').setContent(Y.soss.core.session.className);
+		adminTabView.selectChild(2);
 	});
 	
 });

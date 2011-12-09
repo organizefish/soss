@@ -62,4 +62,4 @@ try {
 
 $_SESSION['classid'] = $classid;
 $_SESSION['class_name'] = $class_name;
-soss_send_json_response(SOSS_RESPONSE_SUCCESS,"Success");
+soss_send_json_response(SOSS_RESPONSE_SUCCESS,"Success",array('classid' => $classid, 'class_name' => $class_name));
