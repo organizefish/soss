@@ -26,24 +26,31 @@
 			<div id="top-bar">
 				<span class="soss-site-title">SOSS</span>
                 <div id="top-bar-options">
-                <span id="top-bar-class-name" class="class-name"></span> (Admin)
-                <a id="change-class-link" href="#">Change&nbsp;Class</a>
+                <select id="change-class-select"></select> <input id="inactive-class-checkbox" type="checkbox" /> 
+			Include inactive (Admin)
                 <a id="change-pass-link" href="#">Change&nbsp;Password</a>
 				<a id="logout-link" href="#" >Sign Off</a>
 				</div>
 			</div>
 
 <!-- PAGE TITLE -->
-			<h1><span class="soss-site-title">SOSS</span> -- <span class="class-name"></span></h1>
+			<h1><span class="class-name"></span></h1>
 <!-- END PAGE TITLE -->
 			
 		</div>
 		<div id="bd">
 		
-			<div id="soss-admin-tabs-container"></div>
-			<div id="soss-admin-tab-0">
+			<div id="soss-admin-tabs-container">
+			<ul>
+			   <li><a href="#download">Download Files</a></li>
+			   <li><a href="#assignments">Assignments</a></li>
+			   <li><a href="#classes">Classes</a></li>
+			   <li><a href="#students">Students</a></li>
+			</ul>
+			<div id="soss-admin-tabs-content">
+			<div id="soss-admin-download-tab">
 				<div class="soss-form-element">
-				<b>List by</b>: Student: 
+				<strong>List by</strong>: Student: 
 				<select id="soss-admin-student-select" name="student">
 				<option value="__all__">[All]</option></select>
 				and assignment: 
@@ -58,7 +65,7 @@
 				<button id="download-button">Download Selected</button>
 				</form>
 			</div>
-			<div id="soss-admin-tab-1">
+			<div id="soss-admin-assignments-tab">
 				<div class="soss-form-element">
 				<table class="no-border">
 				<tr><td><b>Name:</b><span class="reqd">*</span></td> 
@@ -81,7 +88,7 @@
 				
 				<div id="soss-admin-assignment-table"></div>
 			</div>
-			<div id="soss-admin-tab-2">
+			<div id="soss-admin-classes-tab">
 				<div class="soss-form-element">
 				Name:<span class="reqd">*</span>
 				<input id="soss-admin-new-class-name" type="text" name="assgn_name" size="30" maxlength="50" />
@@ -92,7 +99,7 @@
 				
 				<div id="soss-admin-classes-table"></div>
 			</div>
-			<div id="soss-admin-tab-3">
+			<div id="soss-admin-students-tab">
 				<div class="soss-form-element">
                                 <p>
                                 Username:<span class="reqd">*</span>
@@ -108,21 +115,13 @@
 				
 				<div id="soss-admin-students-table"></div>
 			</div>
-		</div>
+			</div><!-- #soss-admin-tabs-content -->
+			</div><!-- #soss-admin-tabs-container -->
+		</div><!-- #bd -->
 		
 		<div id="ft">	
  		<p>SOSS version: <span id="soss-version"></span></p>
 		</div>
-	</div>
-	<div id="choose-class-dialog">
-			<div class="hd">Select Class</div>
-			<div class="bd">
-			<form method="post" action="setclass.php">
-			<p><select id="choose-class-dialog-select" name="id"></select></p>
-			<p><input id="choose-class-dialog-checkbox" type="checkbox" /> 
-			Include inactive classes.</p>
-			</form>
-			</div>
 	</div>
 	
 	<div id="multiple-students-dialog">

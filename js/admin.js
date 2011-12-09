@@ -33,11 +33,45 @@ var config = {
 	}
 };
 
-YUI(config).use('soss-core', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
+YUI(config).use('soss-core', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
 
+	var changeClass = function(e) {
+		
+	};
+	
+	var updateClassList = function(e) {
+		var cbox = Y.one('#inactive-class-checkbox');
+		var select = Y.one('#change-class-select');
+		select.setContent("<option>Loading...</option>");
+		
+		var buildSelect = function(id,resp,args) {
+			var oData= resp.parsedResponse.Data;
+			select.setContent( '<option value="__none__">[Select Class]</option>' );
+			for( var i=0 ; i < oData.length ; i++) {
+				select.append( '<option value="' + oData[i].id +
+					'">'+ oData[i].name + " -- " +
+					oData[i].term + ", " + oData[i].year + '</option>');
+			}
+		};
+		
+		var callback = { success : buildSelect };
+		
+		var url = "query.php?q=classes";
+		if(cbox.checked) query += "&includeInactive=1";
+		Y.io( url, { on: callback } );
+	};
+	
 	Y.on("soss:ready", function(e) {
 		Y.one('#soss-version').setContent(Y.soss.core.version);
 		Y.all('.class-name').setContent(Y.soss.core.session.className);
+		
+		var tabview = new Y.TabView({
+			srcNode: '#soss-admin-tabs-container'
+		}).render();
+		
+		updateClassList();
+		Y.one('#inactive-class-checkbox').on('change', updateClassList);
+		Y.one('#change-class-select').on('change', changeClass);
 	});
 	
 });

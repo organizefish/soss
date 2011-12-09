@@ -21,6 +21,7 @@ label { font-weight: bold; display: block; }
 #top-bar a { color: white; margin-left: 7px; }
 #top-bar a:hover { color: red;  }
 #top-bar-options { float: right; }
+#top-bar:after { display:block; clear:both; content: '.'; height:0; visibility: 'hidden'; }
 
 .late-submission { background:rgb(255,155,155); color:black; }
 #header-username { margin-right:1.5em; }

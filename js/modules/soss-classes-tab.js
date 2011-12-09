@@ -20,6 +20,15 @@
     SOFTWARE.
  */
 
+YUI.add('soss-classes-tab', function(Y, name) {
+	
+	Y.on('soss:ready', function(e) {
+		
+	});
+	
+},'2.0.0', { requires: ['panel', 'event', 'io-base', 'io-form'] });
+
+/*
 (function() {
 	var Dom = YAHOO.util.Dom,
 		Evt = YAHOO.util.Event,
@@ -265,4 +274,4 @@
 	};
 	
 	Evt.onDOMReady(initUI);
-})();
+})();*/

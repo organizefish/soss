@@ -5,3 +5,4 @@
 #class-list-textarea {width:40em; height:15em; }
 .delete-row-cell { cursor: pointer; }
 .disabled em { color:rgb(180,180,180); }
+#soss-admin-tabs-container { margin: auto; }
