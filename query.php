@@ -50,16 +50,8 @@ switch( $query )
 	case "classes":
 		send_classes();
 		break;
-	case "terms":
-		send_terms();
-		break;
 	default:
 		soss_send_json_response(SOSS_RESPONSE_ERROR,"Unrecognized query.");
-}
-
-function send_terms() {
-	global $SOSS_TERMS;
-	soss_send_json_response(SOSS_RESPONSE_SUCCESS,"Success",$SOSS_TERMS);
 }
 
 function send_classes() {
@@ -194,7 +186,10 @@ function send_assignments() {
 // Core information that is available to all users
 function sendCoreInfo()
 {
+	global $SOSS_TERMS;
+	
 	$info = array();
+	$info['terms'] = $SOSS_TERMS;
 	$info['useLdap'] = SOSS_USE_LDAP;
 	$info['version'] = SOSS_VERSION;
 	

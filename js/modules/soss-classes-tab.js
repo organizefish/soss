@@ -22,11 +22,17 @@
 
 YUI.add('soss-classes-tab', function(Y, name) {
 	
-	Y.on('soss:ready', function(e) {
+	Y.on('soss:admin-ready', function(e) {
 		
+		// Poplulate terms select
+		var sel = Y.one('#soss-admin-term-select');
+		for(var i = 0; i < Y.soss.core.terms.length; i++ ) {
+			sel.append('<option>'+Y.soss.core.terms[i]+'</option>');
+		}
+		Y.one('#soss-admin-class-year').set("value", ''+(new Date()).getFullYear());
 	});
 	
-},'2.0.0', { requires: ['panel', 'event', 'io-base', 'io-form'] });
+},'2.0.0', { requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form'] });
 
 /*
 (function() {

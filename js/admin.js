@@ -27,13 +27,14 @@ var config = {
 			base: 'js/modules/',
 			modules: {
 				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
-				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']}
+				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']},
+				'soss-classes-tab': {path: 'soss-classes-tab.js', requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form']}
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss-core', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
+YUI(config).use('soss-core', 'soss-classes-tab', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
 
 	var adminTabView;
 	
@@ -109,6 +110,8 @@ YUI(config).use('soss-core', 'tabview', 'soss-passwd-dialog', 'datatype-date-mat
 		Y.one('#change-class-select').on('change', changeClass);
 		Y.all('.class-name').setContent(Y.soss.core.session.className);
 		adminTabView.selectChild(2);
+		
+		Y.fire("soss:admin-ready");
 	});
 	
 });
