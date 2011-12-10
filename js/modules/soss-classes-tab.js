@@ -37,7 +37,7 @@ YUI.add('soss-classes-tab', function(Y, name) {
 		            {key:"term",label:"Term" },
 		            {key:"year",label:"Year" },
 		            {key:"active",label:"Active", formatter: activeFormatter},
-		            {key:"options", label:"Options", formatter: optionsFormatter}
+		            {key:"options", label:"", formatter: optionsFormatter}
 		            ];
 		var source = new Y.DataSource.IO({
             source: "query.php?q=classes&includeInactive=1"

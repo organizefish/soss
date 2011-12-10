@@ -22,17 +22,23 @@
 
 YUI.add('soss-assign-tab', function(Y, name) {
 	
+	// Data table
+	var assignDT = null;
+	
 	Y.on('soss:admin-ready', function(e) {
+		// Setup the input elements
 		var sel = Y.one('#soss-admin-new-assign-ddmonth');
 		var d = new Date(0,0,1);
+		var today = new Date();
 		for( var i = 0; i < 12; i++ ) {
 			d.setMonth(i);
 			sel.append('<option value="'+i+'">' + Y.DataType.Date.format(d,{format: "%b"}) + '</option>');
 		}
+		sel.set('selectedIndex', today.getMonth());
 		sel = Y.one('#soss-admin-new-assign-ddday');
-		for( var i = 1; i <= 31; i++ ) 
-			sel.append('<option>' + i + '</option>');
-		Y.one('#soss-admin-new-assign-ddyear').set('value', (new Date()).getFullYear());
+		for( var i = 1; i <= 31; i++ ) sel.append('<option>' + i + '</option>');
+		sel.set('selectedIndex', today.getDate() - 1);
+		Y.one('#soss-admin-new-assign-ddyear').set('value', today.getFullYear());
 		sel = Y.one('#soss-admin-new-assign-ddhour');
 		for( var i = 0; i <= 23; i++ ) sel.append('<option>' + ((i<10)?('0'+i) : i) + '</option>');
 		sel = Y.one('#soss-admin-new-assign-ddmin');
@@ -48,6 +54,27 @@ YUI.add('soss-assign-tab', function(Y, name) {
 		Y.on('change', function(e) { toggleDdate(!e.target.get('checked')); }, 
 				'#soss-admin-new-assign-ddcb');
 		
+		// Setup the data table
+		var optionsFormatter = function(o) {
+			return '<div class="trash-button"></div>';
+		};
+		var cols = [
+		            { key:"name", label:'Name' },
+		            { key:"ddate", label:"Due", formatter: Y.soss.formatter.date},
+		            { key:"del", label:"", formatter: optionsFormatter }
+		];
+		var source = new Y.DataSource.IO({
+            source: "query.php?q=assignments"
+        }).plug(Y.Plugin.DataSourceJSONSchema, {
+	        schema: {
+	            resultListLocator: "Data",
+	            resultFields: ["name", "ddate"]
+	        }
+	    });
+		assignDT = new Y.DataTable.Base({ columnset: cols });
+		assignDT.plug(Y.Plugin.DataTableDataSource, { datasource: source });
+		assignDT.render("#soss-admin-assignment-table");
+		assignDT.datasource.load();
 	});
 	
 },'2.0.0', { requires: ['soss-core', 'datatype-date-format', 'event', 'io-base', 'io-form', 'datatable'] });
