@@ -66,26 +66,16 @@
 				</form>
 			</div>
 			<div id="soss-admin-assignments-tab">
-				<div class="soss-form-element">
-				<table class="no-border">
-				<tr><td><b>Name:</b><span class="reqd">*</span></td> 
-				<td>
-				<input id="soss-admin-new-assignment-name" type="text" name="assgn_name" size="30" maxlength="50" />
-				</td>
-				<td rowspan="2"><button id="soss-admin-new-assignment-button">Add</button></td>
-				</tr>
-				<tr><td>
-				<b>Due Date: </b></td>
-				<td>
-				<input type="text" id="soss-admin-due-date" name="dueDate" value="" />
-				<button type="button" id="soss-assignment-show-cal">
-				<img src="img/calbtn.gif" width="18" height="18" alt="Calendar" ></button>
-				<select id="soss-assignment-hour-select" name="hour"></select>
-				:<select id="soss-assignment-minute-select" name="minute"></select>
-				</td></tr>
-				</table>
-				</div>
-				
+				<b>Name:</b><span class="reqd">*</span>
+				<input id="soss-admin-new-assign-name" type="text" size="30" maxlength="50" />
+				<input id="soss-admin-new-assign-ddcb" type="checkbox" /><b>Due Date: </b>
+				<span id="soss-admin-new-assign-ddgroup">
+				<select id="soss-admin-new-assign-ddmonth"></select>
+				<select id="soss-admin-new-assign-ddday"></select>
+				<input id="soss-admin-new-assign-ddyear" type="text" size="5" maxlength="4" />
+				<select id="soss-admin-new-assign-ddhour"></select>
+				:<select id="soss-admin-new-assign-ddmin"></select></span>
+				<button id="soss-admin-new-assign-button">Add</button>
 				<div id="soss-admin-assignment-table"></div>
 			</div>
 			<div id="soss-admin-classes-tab">

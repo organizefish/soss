@@ -29,13 +29,14 @@ var config = {
 				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
 				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']},
 				'soss-classes-tab': {path: 'soss-classes-tab.js', requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form']},
-				'soss-download-tab': {path: 'soss-download-tab.js', requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable']}
+				'soss-download-tab': {path: 'soss-download-tab.js', requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable']},
+				'soss-assign-tab': {path: 'soss-assign-tab.js', requires:  ['soss-core', 'datatype-date-format', 'event', 'io-base', 'io-form', 'datatable']}
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
+YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assign-tab', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
 
 	var adminTabView;
 	

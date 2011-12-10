@@ -9,3 +9,6 @@
 
 .trash-button { width: 20px; height: 20px; background: url('../img/trash.png') no-repeat; }
 .trash-button:hover { cursor: pointer;}
+#soss-admin-new-assign-ddyear { width: 4em; }
+#soss-admin-new-assign-name { margin-right: 1em; width: 10em; }
+#soss-admin-new-assign-ddcb { margin-right: 0.4em;}
