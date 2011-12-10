@@ -108,6 +108,7 @@ class Soss_Authenticate {
 	        
 	        // If success, set session variables
 	        if( true === $result ) {
+	        	$_SESSION['uname'] = $uname;
 	        	// Set authentication type.
 	        	if ($stuRow['grader_priv'] == "Y") {
 	        		$_SESSION['auth'] = AUTH_GRADER;
