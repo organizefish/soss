@@ -9,10 +9,26 @@ YUI.add('soss-core', function(Y, name) {
 	Y.log("soss.js starting up", "info");
 	
 	Y.namespace("soss.core");
+	Y.namespace("soss.event");
+	Y.namespace("soss.formatter");
 	
 	var GUID = Y.guid();
 	
-	Y.namespace("soss.formatter");
+	Y.soss.event.logout = function(e) {
+		e.preventDefault();
+		Y.io("auth.php?a=logout", {
+			on: {
+				success: function() {
+					window.open("login.html","_self");
+				},
+				failure: function() { 
+					alert("Failed to contact server.");
+					window.open("login.html","_self");
+				}
+			}
+		});
+	};
+	
 	Y.soss.formatter.date = function(o) {
 		return Y.DataType.Date.format( Y.DataType.Date.parse(o.value), {format: "%m/%d/%Y %I:%M %p"});
 	};
@@ -50,7 +66,6 @@ YUI.add('soss-core', function(Y, name) {
 			resultFields: ["name", 'ddate']
 		}
 	}});
-	
 	
 	// Get core info.
 	Y.io("query.php?q=coreInfo", {

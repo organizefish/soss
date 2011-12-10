@@ -28,13 +28,14 @@ var config = {
 			modules: {
 				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
 				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']},
-				'soss-classes-tab': {path: 'soss-classes-tab.js', requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form']}
+				'soss-classes-tab': {path: 'soss-classes-tab.js', requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form']},
+				'soss-download-tab': {path: 'soss-download-tab.js', requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable']}
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss-core', 'soss-classes-tab', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
+YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
 
 	var adminTabView;
 	
@@ -43,6 +44,7 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'tabview', 'soss-passwd-dialog'
 		Y.soss.core.session.classid = id;
 		Y.soss.core.session.className = name;
 		Y.all('.class-name').setContent(Y.soss.core.session.className);
+		Y.fire('soss:select-class');
 	};
 	
 	var changeClass = function(e) {
@@ -112,6 +114,7 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'tabview', 'soss-passwd-dialog'
 		Y.one('#inactive-class-checkbox').on('change', updateClassList);
 		Y.one('#change-class-select').on('change', changeClass);
 		Y.on('soss:class-change', updateClassList);
+		Y.on('click', Y.soss.event.logout, '#logout-link');
 		Y.all('.class-name').setContent(Y.soss.core.session.className);
 		adminTabView.selectChild(2);
 		

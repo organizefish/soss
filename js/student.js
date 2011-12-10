@@ -227,23 +227,9 @@ YUI(config).use('soss-core', 'soss-passwd-dialog', 'datatype-date-math', 'dataty
 		Y.one('#max-file-size').setContent(Y.soss.core.uploadMaxFileSize);
 		Y.one('#max-post-size').setContent(Y.soss.core.postMaxSize);
 		Y.one('#max-file-size-hidden').set('value', Y.soss.core.uploadMaxFileSizeBytes);
-		
+
 		Y.one('#upload-button').on('click', beginUpload);
-		
-		Y.one('#logout-link').on('click', function(e) {
-			e.preventDefault();
-			Y.io("auth.php?a=logout", {
-				on: {
-					success: function() {
-						window.open("login.html","_self");
-					},
-					failure: function() { 
-						alert("Failed to contact server.");
-						window.open("login.html","_self");
-					}
-				}
-			});
-		});
+		Y.one('#logout-link').on('click', Y.soss.event.logout);
 		
 		if( Y.soss.core.useLdap ) {
 			Y.one('#change-pass-link').setStyle('display', 'none');
