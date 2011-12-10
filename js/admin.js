@@ -101,6 +101,9 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'tabview', 'soss-passwd-dialog'
 	Y.on("soss:ready", function(e) {
 		Y.one('#soss-version').setContent(Y.soss.core.version);
 		
+		// Publish the admin-ready event
+		Y.publish('soss:admin-ready', {fireOnce: true});
+		
 		adminTabView = new Y.TabView({
 			srcNode: '#soss-admin-tabs-container'
 		}).render();
@@ -108,6 +111,7 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'tabview', 'soss-passwd-dialog'
 		updateClassList();
 		Y.one('#inactive-class-checkbox').on('change', updateClassList);
 		Y.one('#change-class-select').on('change', changeClass);
+		Y.on('soss:class-change', updateClassList);
 		Y.all('.class-name').setContent(Y.soss.core.session.className);
 		adminTabView.selectChild(2);
 		

@@ -6,3 +6,6 @@
 .delete-row-cell { cursor: pointer; }
 .disabled em { color:rgb(180,180,180); }
 #soss-admin-tabs-container { margin: auto; }
+
+.trash-button { width: 20px; height: 20px; background: url('../img/trash.png') no-repeat; }
+.trash-button:hover { cursor: pointer;}

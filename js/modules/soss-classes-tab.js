@@ -22,6 +22,103 @@
 
 YUI.add('soss-classes-tab', function(Y, name) {
 	
+	var classesDT = null;
+	var initClassesDT = function() {
+		var activeFormatter = function(o) {
+			var content = '<input type="checkbox"';
+			if( o.value == 'Y' ) content += ' checked="checked"';
+			return content + " />";
+		};
+		var optionsFormatter = function(o) {
+			return '<div class="trash-button"></div>';
+		};
+		var cols = [
+		            {key:"name",label:"Name" },
+		            {key:"term",label:"Term" },
+		            {key:"year",label:"Year" },
+		            {key:"active",label:"Active", formatter: activeFormatter},
+		            {key:"options", label:"Options", formatter: optionsFormatter}
+		            ];
+		var source = new Y.DataSource.IO({
+            source: "query.php?q=classes&includeInactive=1"
+        }).plug(Y.Plugin.DataSourceJSONSchema, {
+	        schema: {
+	            resultListLocator: "Data",
+	            resultFields: ["id", "name", "term", "year", "active"]
+	        }
+	    });
+		classesDT = new Y.DataTable.Base({ columnset: cols });
+		classesDT.plug(Y.Plugin.DataTableDataSource, { datasource: source });
+		classesDT.render("#soss-admin-classes-table");
+		classesDT.datasource.load();
+		
+		Y.delegate('change', activeCheckboxChange, '#soss-admin-classes-table', 'input[type="checkbox"]');
+		Y.delegate('click', function(e) { Y.log("click event"); }, '#soss-admin-classes-table', '.trash-button' );
+	};
+	
+	var activeCheckboxChange = function(e) {
+		// Don't allow checkbox to change yet
+		e.preventDefault();
+		var tr = e.target.ancestor('tr');
+		var record = classesDT.get('recordset').getRecord(tr.get('id'));
+		var newState = ! (record.getValue('active') == 'Y');
+				
+		var query = "update.php?a=classActiveStatus";
+		query += "&id=" + encodeURIComponent(record.getValue("id"));
+		query += "&status=" + encodeURIComponent((newState) ? "Y" : "N");
+		
+		Y.io(query, {
+			method: 'GET',
+			on: {
+				success: function(id,r) { 
+					if( r.parsedResponse.ResponseCode == 200 ) {
+						record.get('data').active = newState ? "Y" : "N";
+						e.target.set('checked', newState);
+					}
+				}
+			}		
+		});
+	};
+	
+	var addClass = function(e) {
+		var messNode = Y.one('#soss-admin-classes-tab .message');
+		messNode.addClass('error');
+		messNode.setContent('');
+		var cnameNode = Y.one('#soss-admin-new-class-name');
+		var cname = Y.Lang.trim(cnameNode.get('value'));
+		var cyear = Y.Lang.trim(Y.one('#soss-admin-class-year').get('value'));
+		var cterm = Y.one('#soss-admin-term-select').get('value');
+		
+		if( cname === '' ) {
+			messNode.setContent("Please provide a class name.");
+			return;
+		}
+		
+		if( ! cyear.match(/^\d{4}$/) ) {
+			messNode.setContent("That doesn't look like a valid year.  The year should have 4 digits.");
+			return;
+		}
+		
+		var query = "insert.php?t=class";
+		query += "&name=" + encodeURIComponent(cname);
+		query += "&year=" + encodeURIComponent(cyear);
+		query += "&term=" + encodeURIComponent(cterm);
+		
+		Y.io(query, {
+			method: 'get',
+			on: {
+				success: function(id, r) { 
+					if( r.parsedResponse.ResponseCode == 200 ) {
+						cnameNode.set('value','');
+						Y.fire('soss:class-change');
+					} else {
+						YAHOO.soss.showErrorDialog("" + result.Message);
+					}
+				}
+			}
+		});
+	};
+	
 	Y.on('soss:admin-ready', function(e) {
 		
 		// Poplulate terms select
@@ -29,61 +126,18 @@ YUI.add('soss-classes-tab', function(Y, name) {
 		for(var i = 0; i < Y.soss.core.terms.length; i++ ) {
 			sel.append('<option>'+Y.soss.core.terms[i]+'</option>');
 		}
+		
 		Y.one('#soss-admin-class-year').set("value", ''+(new Date()).getFullYear());
+		
+		initClassesDT();
+		
+		Y.on('click', addClass, '#soss-admin-new-class-button');
+		Y.on('soss:class-change', function(e) { classesDT.datasource.load(); } );
 	});
 	
-},'2.0.0', { requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form'] });
+},'2.0.0', { requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form', 'datatable'] });
 
 /*
-(function() {
-	var Dom = YAHOO.util.Dom,
-		Evt = YAHOO.util.Event,
-	    CLASSES_TABLE_ID = "soss-admin-classes-table",
-		YEAR_FIELD_ID = "soss-admin-class-year",
-		TERM_SELECT_ID = "soss-admin-term-select",
-		ADD_CLASS_BUTTON_ID = "soss-admin-new-class-button",
-		CLASS_NAME_FIELD_ID = "soss-admin-new-class-name",
-		DELETE_CONFIRM_DIALOG_ID = "delete-confirm-dialog-assignment",
-		deleteConfirmDialog = null,
-		classidToDelete = null,
-		classNameToDelete = null;
-	
-	var showDeleteConfirmDialog = function() {
-		var dlg = deleteConfirmDialog;
-		var title = "Confirm Delete";
-		
-		if( ! dlg ) {
-			dlg = new YAHOO.widget.SimpleDialog(
-				DELETE_CONFIRM_DIALOG_ID,
-				{
-					width:"30em",
-					fixedcenter:true,
-					visible:false,
-					draggable:false,
-					close:false,
-					icon:YAHOO.widget.SimpleDialog.ICON_INFO,
-					constraintoviewport:true,
-					modal:true,
-					buttons:[
-						{text:"Cancel", handler:function(o){ this.hide(); } , isDefault:true},
-						{text:"Delete", handler:function(o){ this.hide(); deleteClass();} }
-						]
-				}
-			);
-			
-			dlg.setHeader(title);
-			dlg.setBody("Placeholder");
-			dlg.render(document.body);
-			deleteConfirmDialog = dlg;
-		}
-		message = "<p>About to delete class: " + classNameToDelete + ".</p>";
-		message += "<p>Are you sure you want to do this?</p>";
-		dlg.setHeader(title);
-		dlg.setBody(message);
-		dlg.cfg.setProperty('icon', YAHOO.widget.SimpleDialog.ICON_WARN);
-		dlg.bringToTop();
-		dlg.show();
-	};
 	
 	var deleteHandler = function(oArgs) {
 		var key = this.getColumn(oArgs.target).getKey();
@@ -121,163 +175,4 @@ YUI.add('soss-classes-tab', function(Y, name) {
 	
 			}, null );
 	};
-	
-	var addClass = function() {
-		var termSel = Dom.get(TERM_SELECT_ID);
-		var cname = YAHOO.lang.trim(Dom.get(CLASS_NAME_FIELD_ID).value);
-		var cyear = YAHOO.lang.trim(Dom.get(YEAR_FIELD_ID).value);
-		var cterm = termSel.options[termSel.selectedIndex].value;
-		
-		if( ! cname ) {
-			YAHOO.soss.showErrorDialog("Please provide a class name.");
-			return;
-		}
-		
-		if( ! cyear.match(/^\d{4}$/) ) {
-			YAHOO.soss.showErrorDialog("That doesn't look like a valid year." +
-					"  The year should have 4 digits.");
-			return;
-		}
-		
-		var query = "insert.php?t=class";
-		query += "&name=" + YAHOO.soss.urlencode(cname);
-		query += "&year=" + YAHOO.soss.urlencode(cyear);
-		query += "&term=" + YAHOO.soss.urlencode(cterm);
-		
-		YAHOO.util.Connect.asyncRequest('GET', query,
-			{
-				success: function(o) { 
-					var result = YAHOO.soss.parseJSON(o.responseText);
-					
-					if( result.ResponseCode == 200 ) {
-						Dom.get(CLASS_NAME_FIELD_ID).value = "";
-						
-						YAHOO.soss.ds.classesDataSource.flushCache();
-						YAHOO.soss.event.onClassChange.fire();
-					} else {
-						YAHOO.soss.showErrorDialog("" + result.Message);
-					}
-				},
-				failure: function(o) { },
-				timeout:10000
-	
-			}, null );
-	};
-	
-	var activeClassCheckbox = function(oArgs) {
-		var elCheckbox = oArgs.target;
-		var record = this.getRecord(elCheckbox);
-		var newState = elCheckbox.checked;
-		
-		// Prevent the change until we are sure the change took place
-		// on the server-side.
-		Evt.preventDefault(oArgs.event);
-		
-		var query = "update.php?a=classActiveStatus";
-		query += "&id=" + YAHOO.soss.urlencode(record.getData("id"));
-		query += "&status=" + YAHOO.soss.urlencode((newState) ? "Y" : "N");
-		
-		YAHOO.util.Connect.asyncRequest('GET', query,
-			{
-				success: function(o) { 
-					var result = YAHOO.soss.parseJSON(o.responseText);
-					
-					if( result.ResponseCode == 200 ) {
-						elCheckbox.checked = newState;
-					} else {
-						YAHOO.soss.showErrorDialog("" + result.Message);
-					}
-				},
-				failure: function(o) { },
-				timeout:10000
-	
-			}, null );
-	};
-	
-	var updateDataTable = function () {
-		var dt = YAHOO.soss.classDataTable;
-		
-		var callback = {
-			success : dt.onDataReturnReplaceRows,
-			failure : dt.onDataReturnReplaceRows,
-			scope : dt
-		};
-
-		dt.getDataSource().sendRequest('&includeInactive=1',callback);
-	};
-	
-	var updateTermSelect = function() {
-		var doUpdate = function(o) {
-			var result = YAHOO.soss.parseJSON(o.responseText),
-			    termSel = Dom.get(TERM_SELECT_ID);
-			if(result.ResponseCode == 200) {
-				var terms = result.Data;
-				for( var i = 0; i < terms.length; i++ ) {
-					termSel.innerHTML += "<option value=\"" + terms[i] + 
-					"\">"+terms[i]+"</option>";
-				}
-			} else {
-				YAHOO.soss.showErrorDialog("" + result.Message);
-			}
-		},
-		callback = { 
-			success:doUpdate,
-			failure: function() { 
-				YAHOO.soss.showErrorDialog("Unable to update list of terms."); 
-			} 
-		};
-		YAHOO.util.Connect.asyncRequest('GET', 'query.php?q=terms', callback);
-	};
-	
-	var initUI = function() {
-		
-		var addButton = new YAHOO.widget.Button(ADD_CLASS_BUTTON_ID); 
-		addButton.on("click", addClass );
-		
-		updateTermSelect();
-		
-		var yearField = Dom.get(YEAR_FIELD_ID);
-		var today = new Date;
-		yearField.value = today.getFullYear();
-		
-		var columnDefs = [
-		                  {
-		                	  key:"name", 
-		                	  label:'Name',
-		                	  sortable:true,
-		                	  resizeable:true, width:350
-		                  },
-		                  {
-		                	  key:"term", label:"Term",
-		                	  sortable:true, resizeable:true
-		                  },
-		                  {
-		                	  key:"year", label:"Year",
-		                	  sortable:true,resizeable:false
-		                  },
-		                  { key:"active", label:"Active",
-		                	  sortable:true, resizeable:false,
-		                	  formatter:'checkbox'},
-		                 { key:"del", label:"",
-			                	  sortable:false,resizeable:false,
-			                	  formatter:YAHOO.soss.deleteButtonFormatter,
-			                	  className:"delete-row-cell"}
-		];
-		var dt = new YAHOO.widget.DataTable(
-				CLASSES_TABLE_ID,
-				columnDefs, YAHOO.soss.ds.classesDataSource,
-				{
-					MSG_EMPTY: "No classes",
-					initialLoad: true,
-					initialRequest:"&includeInactive=1"
-				}
-		);
-		dt.subscribe("checkboxClickEvent", activeClassCheckbox);
-		dt.subscribe("cellClickEvent", deleteHandler);
-		
-		YAHOO.soss.classDataTable = dt;
-		YAHOO.soss.event.onClassChange.subscribe(updateDataTable);
-	};
-	
-	Evt.onDOMReady(initUI);
-})();*/
+*/
