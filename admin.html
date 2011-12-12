@@ -100,7 +100,7 @@
 				<button id="soss-admin-new-stu-button">Add Student</button>
                 </div>
                 <div id="soss-admin-bulk-students">
-                <p><span class="h2style">Bulk Add</span> (<a id="soss-admin-bulk-instructions" href="#">details</a>)</p>
+                <p id="bulk-add-header"><span class="h2style">Bulk Add</span> (<a id="soss-admin-bulk-instructions" href="#">details</a>)</p>
                 <textarea id="class-list-textarea" name="class_list"></textarea>
                 <p><button id="soss-admin-enter-class-list-button">Add Students</button></p>
 				</div>
@@ -114,44 +114,6 @@
 		
 		<div id="ft">	
  		<p>SOSS version: <span id="soss-version"></span></p>
-		</div>
-	</div>
-	
-	<div id="multiple-students-dialog">
-			<div class="hd">Add Multiple Students</div>
-			<div class="bd">
-			<form method="post" action="insert.php?t=bulkstudent">
-			<p><textarea id="class-list-textarea" name="class_list"></textarea></p>
-			<div class="instructions"><p>Class list must contain a list of the students,
-      one student per line.  Each line can have any of the following three 
-	  formats:</p>
-	  		<p>A single email address.  (Example: <code>jdoe@example.com</code>)</p>
-	  		<p>A standard CSV style with last name, first name and email.  
-	  		(Example:<code>Doe, John, jdoe@example.com</code>)</p>
-	  		<p>Last name, then a comma, then first name, followed by the email in
-	  parenthesis.  (Example: <code>Doe, John (jdoe@example.com)</code>).</p>
-	  	<p>(Note: A full class list in the above format can be generated from Banner by going to "Summary
-	  Class List w/o Hyperlinks", selecting the top-most checkbox under the E-Mail
-	  column, then clicking on "Send email to selected
-	  students".)</p>
-	  		</div>
-	  		</form>
-			</div>
-	</div>
-	
-	<div id="change-admin-pass-dialog">
-		<div class="hd">Change Password</div>
-		<div class="bd">
-		<form method="post" action="update.php?a=adminPass">
-		<table class="no-border center">
-			<tr><td><label for="old_pass">Current Password:</label></td>
-			<td><input type="password" name="old_pass" /></td></tr>
-			<tr><td><label for="pass_1">New Password:</label></td>
-			<td><input type="password" name="pass_1" /></td></tr>
-			<tr><td><label for="pass_2">New Password (again):</label></td>
-			<td><input type="password" name="pass_2" /></td></tr>
-		</table>
-		</form>
 		</div>
 	</div>
 	
