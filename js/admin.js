@@ -30,7 +30,7 @@ var config = {
 				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']},
 				'soss-classes-tab': {path: 'soss-classes-tab.js', requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form']},
 				'soss-download-tab': {path: 'soss-download-tab.js', requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable']},
-				'soss-assign-tab': {path: 'soss-assign-tab.js', requires:  ['soss-core', 'datatype-date-format', 'event', 'io-base', 'io-form', 'datatable']}
+				'soss-assign-tab': {path: 'soss-assign-tab.js', requires:  ['soss-core', 'datatype-number-parse', 'datatype-date-format', 'event', 'io-base', 'io-form', 'datatable']}
 			}
 		}	
 	}

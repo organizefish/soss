@@ -12,3 +12,10 @@
 #soss-admin-new-assign-ddyear { width: 4em; }
 #soss-admin-new-assign-name { margin-right: 1em; width: 10em; }
 #soss-admin-new-assign-ddcb { margin-right: 0.4em;}
+
+#soss-admin-students-form-container { width: 100%; }
+#soss-admin-students-form-container:after { display:block; content:'.'; height:0; clear:both; }
+#soss-admin-new-student { border-right: 1px solid rgb(80,80,80); padding: 1em 20px 1em 1em; margin-right: 20px;  width: 350px; float: left; }
+#soss-admin-new-student input { width: 100%; margin-bottom: 0.5em; }
+#soss-admin-bulk-students { padding: 1em 0; }
+#soss-admin-bulk-students textarea { width: 350px; height: 150px; }

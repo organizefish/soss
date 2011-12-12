@@ -30,7 +30,9 @@ YUI.add('soss-core', function(Y, name) {
 	};
 	
 	Y.soss.formatter.date = function(o) {
-		return Y.DataType.Date.format( Y.DataType.Date.parse(o.value), {format: "%m/%d/%Y %I:%M %p"});
+		if( o.value )
+			return Y.DataType.Date.format( Y.DataType.Date.parse(o.value), {format: "%m/%d/%Y %I:%M %p"});
+		else return '';
 	};
 	
 	// Global IO handlers.  These are intended to take care of stuff that

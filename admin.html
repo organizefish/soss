@@ -49,7 +49,6 @@
 			</ul>
 			<div id="soss-admin-tabs-content">
 			<div id="soss-admin-download-tab">
-				<div class="soss-form-element">
 				<strong>List by</strong>: Student: 
 				<select id="soss-admin-student-select" name="student">
 				<option value="__all__">[All]</option></select>
@@ -58,7 +57,6 @@
 				<option value="__all__">[All]</option>
 				</select>
 				<button id="soss-admin-list-button">List</button>
-				</div>
 				
 				<form id="soss-download-form" method="post" action="download.php">
 				<div id="soss-admin-submission-table"></div>
@@ -79,29 +77,33 @@
 				<div id="soss-admin-assignment-table"></div>
 			</div>
 			<div id="soss-admin-classes-tab">
-				<div class="soss-form-element">
 				Name:<span class="reqd">*</span>
 				<input id="soss-admin-new-class-name" type="text" name="assgn_name" size="30" maxlength="50" />
 				term:<span class="reqd">*</span> <select id="soss-admin-term-select" name="term"></select>
 				year:<span class="reqd">*</span> <input id="soss-admin-class-year" type="text" maxlength="4" name="year" />
 				<button id="soss-admin-new-class-button">Add</button>
 				<p class="message"></p>
-				</div>
 				
 				<div id="soss-admin-classes-table"></div>
 			</div>
 			<div id="soss-admin-students-tab">
-				<div class="soss-form-element">
-                                <p>
-                                Username:<span class="reqd">*</span>
+				<div id="soss-admin-students-form-container">
+				<div id="soss-admin-new-student">
+				<label><span class="reqd">*</span>Username:</label>
 				<input id="soss-admin-new-stu-uname" type="text" name="student_uname" size="20" maxlength="70" />
-				EMail:
+				<label>EMail:</label>
 				<input id="soss-admin-new-stu-email" type="text" name="student_email" size="20" maxlength="70" />
-                                </p><p>First Name:<input id="soss-admin-new-stu-fname" type="text" name="student_fname" size="10" maxlength="25" />
-				Last Name:<input id="soss-admin-new-stu-lname" type="text" name="student_lname" size="10" maxlength="25" />
-				<button id="soss-admin-new-stu-button">Add</button>
-                                </p>
-                                <p><button id="soss-admin-enter-class-list-button">Enter Multiple Students</button></p>
+                <label>First Name:</label>
+                <input id="soss-admin-new-stu-fname" type="text" name="student_fname" size="10" maxlength="25" />
+				<label>Last Name:</label>
+				<input id="soss-admin-new-stu-lname" type="text" name="student_lname" size="10" maxlength="25" />
+				<button id="soss-admin-new-stu-button">Add Student</button>
+                </div>
+                <div id="soss-admin-bulk-students">
+                <p><span class="h2style">Bulk Add</span> (<a id="soss-admin-bulk-instructions" href="#">details</a>)</p>
+                <textarea id="class-list-textarea" name="class_list"></textarea>
+                <p><button id="soss-admin-enter-class-list-button">Add Students</button></p>
+				</div>
 				</div>
 				
 				<div id="soss-admin-students-table"></div>

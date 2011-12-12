@@ -25,6 +25,36 @@ YUI.add('soss-assign-tab', function(Y, name) {
 	// Data table
 	var assignDT = null;
 	
+	var addAssignment = function(e) {
+		var aname = Y.Lang.trim(Y.one('#soss-admin-new-assign-name').get('value'));
+		
+		var query = "insert.php?t=assignment";
+		if( ! aname ) return;
+		query += "&aname=" + encodeURIComponent(aname);
+		
+		if( Y.one('#soss-admin-new-assign-ddcb').get('checked') ) {
+			var dmonth = Y.one('#soss-admin-new-assign-ddmonth').get('value');
+			var dday = Y.one('#soss-admin-new-assign-ddday').get('value');
+			var dyear = Y.one('#soss-admin-new-assign-ddyear').get('value');
+			var dhour = Y.one('#soss-admin-new-assign-ddhour').get('value');
+			var dmin = Y.one('#soss-admin-new-assign-ddmin').get('value');
+			var ddate = null;
+			ddate = new Date(dyear, dmonth, dday, dhour, dmin);
+			query += "&ddate=" + encodeURIComponent(Y.DataType.Date.format(ddate,{format:"%Y-%m-%d %H:%M:00"}));
+		}
+		
+		Y.io( query, {
+			on: {
+				success: function(id, r) { 
+					if( r.parsedResponse.ResponseCode == 200 ) {
+						Y.one('#soss-admin-new-assign-name').set('value','');
+						Y.fire('soss:assign-change');
+					}
+				}
+			}
+		});
+	};
+	
 	Y.on('soss:admin-ready', function(e) {
 		// Setup the input elements
 		var sel = Y.one('#soss-admin-new-assign-ddmonth');
@@ -75,6 +105,9 @@ YUI.add('soss-assign-tab', function(Y, name) {
 		assignDT.plug(Y.Plugin.DataTableDataSource, { datasource: source });
 		assignDT.render("#soss-admin-assignment-table");
 		assignDT.datasource.load();
+		Y.on('soss:assign-change', function(e) { assignDT.datasource.load();});
+		
+		Y.on('click', addAssignment, '#soss-admin-new-assign-button');
 	});
 	
-},'2.0.0', { requires: ['soss-core', 'datatype-date-format', 'event', 'io-base', 'io-form', 'datatable'] });
+},'2.0.0', { requires: ['soss-core', 'datatype-date-format', 'datatype-number-parse','event', 'io-base', 'io-form', 'datatable'] });
