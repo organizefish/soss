@@ -17,6 +17,7 @@ YUI.add('soss-passwd-dialog', function(Y, name) {
 				Y.io(url, {
 					method: 'POST',
 					form: {id:'soss-passwd-dialog'},
+					data: 'uname=' + uname,
 					on:{
 						success: function(id,resp,args){
 							if(resp.parsedResponse.ResponseCode == 200) {
@@ -43,6 +44,7 @@ YUI.add('soss-passwd-dialog', function(Y, name) {
 				render: true,
 				visible: false,
 				bodyContent: content,
+				zIndex: 2,
 				headerContent: 'Change Password'
 			});
 			Y.soss.passwdDialog.dialog.addButton({value:"Change", action: doChange, section:Y.WidgetStdMod.FOOTER});

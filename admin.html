@@ -88,7 +88,13 @@
 			</div>
 			<div id="soss-admin-students-tab">
 				<div id="soss-admin-students-form-container">
+                <div id="soss-admin-bulk-students">
+                <p id="bulk-add-header"><span class="h2style">Add Students</span> (<a id="soss-admin-bulk-instructions" href="#">details</a>)</p>
+                <textarea id="class-list-textarea" name="class_list"></textarea>
+                <p><button id="soss-admin-bulk-add-button">Add Students</button><span class="message"></span></p>
+				</div>
 				<div id="soss-admin-new-student">
+				<p class="h2style">Add A Student</p>
 				<label><span class="reqd">*</span>Username:</label>
 				<input id="soss-admin-new-stu-uname" type="text" name="student_uname" size="20" maxlength="70" />
 				<label>EMail:</label>
@@ -99,11 +105,6 @@
 				<input id="soss-admin-new-stu-lname" type="text" name="student_lname" size="10" maxlength="25" />
 				<button id="soss-admin-new-stu-button">Add Student</button>
                 </div>
-                <div id="soss-admin-bulk-students">
-                <p id="bulk-add-header"><span class="h2style">Bulk Add</span> (<a id="soss-admin-bulk-instructions" href="#">details</a>)</p>
-                <textarea id="class-list-textarea" name="class_list"></textarea>
-                <p><button id="soss-admin-enter-class-list-button">Add Students</button></p>
-				</div>
 				</div>
 				
 				<div id="soss-admin-students-table"></div>

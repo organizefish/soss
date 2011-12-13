@@ -106,22 +106,34 @@ function change_student_pass() {
 	try {
 		$err_str = "";
 		$db = SOSS_DB::getInstance();
-	
 		$old_pass = soss_get_request('curr_pass', false);
-		$query = "SELECT passwd FROM %s WHERE passwd='%s' AND";
-		$query .= " username='%s' AND class_id='%s'";
-		$query = sprintf( $query,
-			SOSS_DB::$STUDENT_TABLE,
-			$db->dbclean( sha1($old_pass) ),
-			$db->dbclean( $_SESSION['uname'] ),
-			$db->dbclean( $_SESSION['classid'] ) );
-		$result = $db->query($query);
+		
+		// Check current password if we have less than admin rights.
+		if( $_SESSION['auth'] < AUTH_FACULTY ) {
+			$query = "SELECT passwd FROM %s WHERE passwd='%s' AND";
+			$query .= " username='%s' AND class_id='%s'";
+			$query = sprintf( $query,
+				SOSS_DB::$STUDENT_TABLE,
+				$db->dbclean( sha1($old_pass) ),
+				$db->dbclean( $_SESSION['uname'] ),
+				$db->dbclean( $_SESSION['classid'] ) );
+			$result = $db->query($query);
+			if( mysql_num_rows($result) != 1 ) 
+				soss_send_json_response(SOSS_RESPONSE_ERROR, "Incorrect password.");
+		}
+		
+		// Only admins can change a password for someone other than themselves
+		$requestedUname = soss_get_request('uname');
+		if( $_SESSION['auth'] >= AUTH_FACULTY && !empty($requestedUname)) {
+			$uname = $requestedUname;
+		} else {
+			$uname = $_SESSION['uname'];
+		}
    
+		// Check new passwords
 		$new_pass_1 = soss_get_request('new_pass_1', false);
 		$new_pass_2 = soss_get_request('new_pass_2', false);
-		if( mysql_num_rows($result) != 1 ) {
-			$err_str = "Incorrect password, try again.";
-		} elseif ( $new_pass_1 != $new_pass_2 ) {
+		if ( $new_pass_1 != $new_pass_2 ) {
 			$err_str = "New passwords don't match, try again.";
 		} elseif ( $new_pass_1 == $old_pass ) {
 			$err_str = "New password is the same as the old.  Password not changed.";
@@ -133,7 +145,7 @@ function change_student_pass() {
 				SOSS_DB::$STUDENT_TABLE,
 				$db->dbclean( sha1($new_pass_1) ),
 				$db->dbclean( $_SESSION['classid'] ),
-				$db->dbclean( $_SESSION['uname'] ) );
+				$db->dbclean( $uname ) );
 			
 			$result = $db->query($query);
    
