@@ -39,6 +39,7 @@ YUI.add('soss-students-tab', function(Y, name) {
 	var addStudent = function(e) {
 		Y.log("addStudent");
 		e.preventDefault();
+		Y.soss.optionDialog.show("this is the message", function() {} );
 	};
 	var bulkAddStudents = function(e) {
 		Y.log("bulkAddStudents");
@@ -159,4 +160,4 @@ YUI.add('soss-students-tab', function(Y, name) {
 		Y.on('click', showInstructionsPanel, '#soss-admin-bulk-instructions');
 	});
 	
-}, '2.0.0', { requires: ['soss-passwd-dialog', 'panel', 'event', 'io-base', 'io-form'] });
+}, '2.0.0', { requires: ['soss-passwd-dialog', 'soss-option-dialog', 'panel', 'event', 'io-base', 'io-form'] });

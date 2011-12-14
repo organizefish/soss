@@ -27,35 +27,14 @@ var config = {
 			base: 'js/modules/',
 			modules: {
 				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
-				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']}
+				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']},
+				'soss-option-dialog' : {path: 'soss-option-dialog.js', requires: ['panel', 'event'] }
 			}
 		}	
 	}
 };
 
-YUI(config).use('soss-core', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form', 'io-upload-iframe', 'panel','datasource-io', 'datatable',function(Y) {
-	
-	var yesNoPanel = null;
-	var showYesNoPanel = function(message, yesHook) {
-		// Lazy creation of the panel
-		if( yesNoPanel == null ) {
-			yesNoPanel = new Y.Panel( {
-				srcNode: '#yesNoPanel',
-				width: 450,
-				modal: true,
-				headerContent: 'Warning',
-				centered: true,
-				render: true,
-				visible: false,
-				buttons: [
-				          {value: "Yes", action: function(e) {e.preventDefault(); yesNoPanel.hide(); yesHook(); }, section:Y.WidgetStdMod.FOOTER },
-				          {value: "No", action: function(e) {e.preventDefault(); yesNoPanel.hide(); }, section:Y.WidgetStdMod.FOOTER }
-				          ]
-			});
-		}
-		yesNoPanel.setStdModContent(Y.WidgetStdMod.BODY, message);
-		yesNoPanel.show();
-	};
+YUI(config).use('soss-core', 'soss-option-dialog', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form', 'io-upload-iframe', 'panel','datasource-io', 'datatable',function(Y) {
 	
 	var refreshFileInputs = function(e) {
 		var numFileInputs = Y.one('#num-files-select').get('value');
@@ -93,17 +72,17 @@ YUI(config).use('soss-core', 'soss-passwd-dialog', 'datatype-date-math', 'dataty
 		});
 	
 	    if( classFile ) {
-	    	showYesNoPanel("<p>You are submitting a Java bytecode file (ending in <code>.class</code>).</p>" +
+	    	Y.soss.optionDialog.show("<p>You are submitting a Java bytecode file (ending in <code>.class</code>).</p>" +
 				  "<p>For most courses, instructors only want the source code files" +
 				  "(files ending in <code>.java</code>).</p>" +
-				  "<p>Are you sure that you want to submit the bytecode file(s)?</p>", doUpload ); 
+				  "<p>Are you sure that you want to submit the bytecode file(s)?</p>", doUpload, 'Yes', 'No' ); 
 	    	return; 
 	    }
 	    if( backupFile ) { 
-	    	showYesNoPanel("<p>You are submitting an editor's backup file (ending in <code>~</code>).</p>" +
+	    	Y.soss.optionDialog.show("<p>You are submitting an editor's backup file (ending in <code>~</code>).</p>" +
 				  "<p>Some text editors and IDEs create backup files that end in <code>~</code>.  Since a backup file " +
 				  " may not contain the most recent version of your code, you probably don't want to submit this file.</p>" +
-				  "<p>Are you sure that you want to submit the backup file(s)?</p>", doUpload ); 
+				  "<p>Are you sure that you want to submit the backup file(s)?</p>", doUpload, 'Yes', 'No' ); 
 	    	return; 
 	    }
 	    if( !atLeastOne ) { showUploadError("Please provide at least one file to upload.");	return; }
