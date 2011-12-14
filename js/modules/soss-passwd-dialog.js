@@ -17,7 +17,7 @@ YUI.add('soss-passwd-dialog', function(Y, name) {
 				Y.io(url, {
 					method: 'POST',
 					form: {id:'soss-passwd-dialog'},
-					data: 'uname=' + uname,
+					data: 'uname=' + encodeURIComponent(uname),
 					on:{
 						success: function(id,resp,args){
 							if(resp.parsedResponse.ResponseCode == 200) {

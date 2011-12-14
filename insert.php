@@ -152,15 +152,12 @@ class Soss_Insert {
             }
         }
 
-        $message = "<div style=\"text-align: left\"><p>$good_count student(s) added.</p>";
+        $message = "$good_count student(s) added.";
+        $data = array( 'errors' => array() );
         if (count($errors) > 0 ) {
-            $message .= "<p style=\"color: red; font-weight: bold;\">Some errors occured: </p> <ul>";
-            foreach( $errors as $err )
-                $message .= "<li>$err</li>";
-            $message .= "</ul>";
+            $data['errors'] = $errors;
         }
-        $message .= "</div>";
-        soss_send_json_response(SOSS_RESPONSE_SUCCESS, $message);
+        soss_send_json_response(SOSS_RESPONSE_SUCCESS, $message, $data);
     }
 
     private function findUserInLdap( $uname ) {

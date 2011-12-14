@@ -41,3 +41,4 @@ table.center { margin:auto; }
 #soss-passwd-dialog label { display:block; font-weight: bold; }
 #soss-passwd-dialog input { width: 100%; font-size: 120%; height: 1.5em; }
 
+.spinner { padding: 3px 25px 3px 0; background: url(../img/spinner.gif) no-repeat top right; }

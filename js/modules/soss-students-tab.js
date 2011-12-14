@@ -43,6 +43,29 @@ YUI.add('soss-students-tab', function(Y, name) {
 	var bulkAddStudents = function(e) {
 		Y.log("bulkAddStudents");
 		e.preventDefault();
+		var mess = Y.one('#bulk-add-message');
+		var button = Y.one('#soss-admin-bulk-add-button');
+		mess.setContent('Creating accounts...');
+		mess.addClass('spinner');
+		mess.set('display', 'inline');
+		button.set('disabled', true);
+		var list = encodeURIComponent(Y.one('#class-list-textarea').get('value'));
+		
+		Y.io('insert.php?t=bulkstudent', {
+			method: 'POST',
+			data: 'class_list=' + list,
+			on: {
+				success: function(id, r) {
+					mess.removeClass('spinner');
+					button.set('disabled', false);
+					mess.setContent(r.parsedResponse.Message);
+					if( r.parsedResponse.Data.errors ) {
+						// TODO display a panel with the errors here.
+					}
+					studentsDT.datasource.load();
+				}
+			}
+		});
 	};
 	
 	var studentsDT = null;
