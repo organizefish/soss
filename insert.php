@@ -51,6 +51,18 @@ if ($target == "assignment") {
 class Soss_Insert {
 
     public function bulk_insert_student() {
+    	
+    	// Make sure the class id is valid
+    	try {
+	    	$db = SOSS_DB::getInstance();
+	    	if( ! $db->isValidClassId() ) {
+	    		soss_send_json_response(SOSS_RESPONSE_ERROR, "Invalid class.");
+	    	}
+    	} catch (SOSS_DB_Exception $e) {
+    		soss_send_json_response(SOSS_RESPONSE_ERROR,
+                            "SQL Exception: " . $e->getCode() . $e->getMessage());
+    	}
+    	
         $errors = array();
         $students = array();
         $input = soss_get_request('class_list');
@@ -264,6 +276,9 @@ class Soss_Insert {
         try {
             $db = SOSS_DB::getInstance();
 
+            if( ! $db->isValidClassId() ) {
+            	soss_send_json_response(SOSS_RESPONSE_ERROR, "Invalid class.");
+            }
             if (empty($data['uname'])) {
                 soss_send_json_response(SOSS_RESPONSE_ERROR,
                         "Missing required information.");
@@ -411,6 +426,10 @@ class Soss_Insert {
 
         try {
             $db = SOSS_DB::getInstance();
+            
+            if( ! $db->isValidClassId() ) {
+            	soss_send_json_response(SOSS_RESPONSE_ERROR, "Invalid class.");
+            }
 
             // Check to see if the assignment name already exists
             $sql = "SELECT name FROM %s ";

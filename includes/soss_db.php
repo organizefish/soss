@@ -149,5 +149,16 @@ class SOSS_DB {
     public function __clone() {
         trigger_error('Clone is not allowed.', E_USER_ERROR);
     }
+    
+    public function isValidClassId($id = null) {
+    	if (is_null($id)) {
+    		$id = $_SESSION['classid'];
+    	}
+    	$db = $this->getInstance();
+    	$sql = "SELECT * FROM %s WHERE class_id='%s'";
+    	$sql = sprintf($sql, SOSS_DB::$CLASS_TABLE, $this->dbclean($id));
+    	$result = $this->query($sql);
+    	return mysql_num_rows($result) > 0;
+    }
 
 }

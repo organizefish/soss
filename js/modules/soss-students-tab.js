@@ -108,17 +108,24 @@ YUI.add('soss-students-tab', function(Y, name) {
 				success: function(id, r) {
 					mess.removeClass('spinner');
 					button.set('disabled', false);
-					mess.setContent(r.parsedResponse.Message);
-					var errs = r.parsedResponse.Data.errors;
-					if( errs.length > 0 ) {
-						var message = '<p>' + r.parsedResponse.Message + '</p>';
-						message += '<p class="error">Some errors occured:</p><ul>';
-						for( var i = 0; i < errs.length; i++ )
-							message += "<li>" + errs[i] + "</li>";
-						message += "</ul>";
-						showMessagePanel(message);
+					var code = r.parsedResponse.ResponseCode;
+					if( code == 200 ) {
+						mess.removeClass('error');
+						mess.setContent(r.parsedResponse.Message);
+						var errs = r.parsedResponse.Data.errors;
+						if( errs.length > 0 ) {
+							var message = '<p>' + r.parsedResponse.Message + '</p>';
+							message += '<p class="error">Some errors occured:</p><ul>';
+							for( var i = 0; i < errs.length; i++ )
+								message += "<li>" + errs[i] + "</li>";
+							message += "</ul>";
+							showMessagePanel(message);
+						}
+						studentsDT.datasource.load();
+					} else {
+						mess.addClass('error');
+						mess.setContent(r.parsedResponse.Message);
 					}
-					studentsDT.datasource.load();
 					Y.later(5000, Y, function(){ mess.setStyle('display', 'none'); });
 				}
 			}

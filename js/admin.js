@@ -52,23 +52,19 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assi
 	
 	var changeClass = function(e) {
 		var selectedId = e.target.get('value');
-		if( selectedId < 0 ) {
-			changeClassUI(-1,"No class selected.");
-		} else {
-			var cfg = {
-					method: 'GET',
-					on: {
-						success: function(id, resp, args) {
-							var r = resp.parsedResponse;
-							if( resp.parsedResponse.ResponseCode == 200 ) {
-								changeClassUI(r.Data.classid,r.Data.class_name);
-							}
+		var cfg = {
+				method: 'GET',
+				on: {
+					success: function(id, resp, args) {
+						var r = resp.parsedResponse;
+						if( resp.parsedResponse.ResponseCode == 200 ) {
+							changeClassUI(r.Data.classid,r.Data.class_name);
 						}
 					}
-				};
-			var url = 'setclass.php?id=' + encodeURIComponent(selectedId);
-			Y.io(url, cfg);
-		}
+				}
+			};
+		var url = 'setclass.php?id=' + encodeURIComponent(selectedId);
+		Y.io(url, cfg);
 	};
 	
 	var updateClassList = function(e) {

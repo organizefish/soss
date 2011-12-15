@@ -37,7 +37,6 @@ if(empty($classid)) {
 	soss_send_json_response(SOSS_RESPONSE_ERROR, "Missing id.");
 }
 
-// Check that the class id is a valid one
 try {
 	$db = SOSS_DB::getInstance();
 	
@@ -47,17 +46,17 @@ try {
 		SOSS_DB::$CLASS_TABLE,
 		$db->dbclean($classid) );
 	$result = $db->query($query);
-	if(mysql_num_rows($result) == 0) {
-		soss_send_json_response(SOSS_RESPONSE_ERROR, "Invalid id.");
+	if(mysql_num_rows($result) > 0) {
+		$row = $db->fetch_row($result);
+		
+		$class_name = $row['name'];
+		$class_name .= ", ".$row['term']." ".$row['theyear'];
+	} else {
+		$classid = -1;
+		$class_name = "No class selected.";
 	}
-	$row = $db->fetch_row($result);
-	
-	$class_name = $row['name'];
-	$class_name .= ", ".$row['term']." ".$row['theyear'];
-	
 } catch(SOSS_DB_Exception $e) {
-	soss_send_json_response(SOSS_RESPONSE_ERROR, 
-		"DB Exception: " . $e->getMessage());
+	soss_send_json_response(SOSS_RESPONSE_ERROR, "DB Exception: " . $e->getMessage());
 }
 
 $_SESSION['classid'] = $classid;
