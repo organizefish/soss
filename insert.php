@@ -312,7 +312,7 @@ class Soss_Insert {
                     if (mysql_affected_rows() != 1) {
                         soss_send_json_response(SOSS_RESPONSE_ERROR, "Database error.");
                     }
-                    soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Success");
+                    soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Student account '{$data['uname']}' added.");
                 }
             }
         } catch (SOSS_DB_Exception $e) {

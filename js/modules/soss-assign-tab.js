@@ -108,6 +108,7 @@ YUI.add('soss-assign-tab', function(Y, name) {
 		Y.on('soss:assign-change', function(e) { assignDT.datasource.load();});
 		
 		Y.on('click', addAssignment, '#soss-admin-new-assign-button');
+		Y.on('soss:select-class', function(e) { assignDT.datasource.load(); });
 	});
 	
 },'2.0.0', { requires: ['soss-core', 'datatype-date-format', 'datatype-number-parse','event', 'io-base', 'io-form', 'datatable'] });

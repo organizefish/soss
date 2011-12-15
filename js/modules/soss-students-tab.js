@@ -1,11 +1,27 @@
 YUI.add('soss-students-tab', function(Y, name) {
+	var messagePanel = null;
+	var showMessagePanel = function(message) {
+		// Lazy creation of the panel
+		if( messagePanel == null ) {
+			messagePanel = new Y.Panel( {
+				width: 450,
+				modal: true,
+				centered: true,
+				render: true,
+				visible: false,
+				zIndex: 3,
+				buttons: [ {value: 'Ok', action: function(e) { messagePanel.hide(); }, section:Y.WidgetStdMod.FOOTER }, {type:'close'}]
+			});
+		}
+		messagePanel.setStdModContent(Y.WidgetStdMod.BODY, message);
+		messagePanel.show();
+	};
 	
 	var chpass = function(e) {
 		Y.log("chpass");
 		e.preventDefault();
 		var tr = e.target.ancestor('tr');
 		var record = studentsDT.get('recordset').getRecord(tr.get('id'));
-		
 		Y.soss.passwdDialog.show(record.getValue('uname'), false, function() {} );
 	};
 	var changeGraderStatus = function (e) { 
@@ -39,7 +55,40 @@ YUI.add('soss-students-tab', function(Y, name) {
 	var addStudent = function(e) {
 		Y.log("addStudent");
 		e.preventDefault();
-		Y.soss.optionDialog.show("this is the message", function() {} );
+		var mess = Y.one('#student-add-message');
+		var uname = Y.Lang.trim(Y.one('#soss-admin-new-stu-uname').get('value'));
+		if( !uname ) {
+			mess.setStyle('display', 'inline');
+			mess.addClass('error');
+			mess.setContent('Please provide a username.');
+		}
+		
+		var email = Y.Lang.trim( Y.one('#soss-admin-new-stu-email').get('value'));
+		var fname = Y.Lang.trim( Y.one('#soss-admin-new-stu-fname').get('value'));
+		var lname = Y.Lang.trim( Y.one('#soss-admin-new-stu-lname').get('value'));
+		var postData = 'uname=' + encodeURIComponent(uname) + '&' +
+	      'email=' + encodeURIComponent(email) + '&' +
+	      'fname=' + encodeURIComponent(fname) + '&' +
+	      'lname='+ encodeURIComponent(lname);
+		Y.io( 'insert.php?t=student', {
+			method: 'POST',
+			data: postData,
+			on: {
+				success: function(id, r) {
+					var code = r.parsedResponse.ResponseCode;
+					mess.setStyle('display', 'inline');
+					if( code == 200 ) {
+						mess.removeClass('error');
+						mess.setContent(r.parsedResponse.Message);
+						studentsDT.datasource.load();
+					} else {
+						mess.addClass('error');
+						mess.setContent(r.parsedResponse.Message);
+					}
+					Y.later(10000, Y, function(){ mess.setStyle('display', 'none'); });
+				}
+			}
+		});
 	};
 	var bulkAddStudents = function(e) {
 		Y.log("bulkAddStudents");
@@ -48,7 +97,7 @@ YUI.add('soss-students-tab', function(Y, name) {
 		var button = Y.one('#soss-admin-bulk-add-button');
 		mess.setContent('Creating accounts...');
 		mess.addClass('spinner');
-		mess.set('display', 'inline');
+		mess.setStyle('display', 'inline');
 		button.set('disabled', true);
 		var list = encodeURIComponent(Y.one('#class-list-textarea').get('value'));
 		
@@ -60,10 +109,17 @@ YUI.add('soss-students-tab', function(Y, name) {
 					mess.removeClass('spinner');
 					button.set('disabled', false);
 					mess.setContent(r.parsedResponse.Message);
-					if( r.parsedResponse.Data.errors ) {
-						// TODO display a panel with the errors here.
+					var errs = r.parsedResponse.Data.errors;
+					if( errs.length > 0 ) {
+						var message = '<p>' + r.parsedResponse.Message + '</p>';
+						message += '<p class="error">Some errors occured:</p><ul>';
+						for( var i = 0; i < errs.length; i++ )
+							message += "<li>" + errs[i] + "</li>";
+						message += "</ul>";
+						showMessagePanel(message);
 					}
 					studentsDT.datasource.load();
+					Y.later(5000, Y, function(){ mess.setStyle('display', 'none'); });
 				}
 			}
 		});
@@ -158,6 +214,8 @@ YUI.add('soss-students-tab', function(Y, name) {
 		Y.on('click', addStudent, '#soss-admin-new-stu-button');
 		Y.on('click', bulkAddStudents, '#soss-admin-bulk-add-button');
 		Y.on('click', showInstructionsPanel, '#soss-admin-bulk-instructions');
+		
+		Y.on('soss:select-class', function(e) { studentsDT.datasource.load(); });
 	});
 	
 }, '2.0.0', { requires: ['soss-passwd-dialog', 'soss-option-dialog', 'panel', 'event', 'io-base', 'io-form'] });

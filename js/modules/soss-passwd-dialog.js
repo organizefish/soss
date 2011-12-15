@@ -48,6 +48,7 @@ YUI.add('soss-passwd-dialog', function(Y, name) {
 				headerContent: 'Change Password'
 			});
 			Y.soss.passwdDialog.dialog.addButton({value:"Change", action: doChange, section:Y.WidgetStdMod.FOOTER});
+			Y.soss.passwdDialog.dialog.addButton({value:"Cancel", action: function(e) { Y.soss.passwdDialog.dialog.hide(); }, section:Y.WidgetStdMod.FOOTER});
 		}
 		
 		var contentNode = Y.soss.passwdDialog.dialog.getStdModNode(Y.WidgetStdMod.BODY);
