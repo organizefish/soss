@@ -108,8 +108,10 @@ function delete_student() {
 		$students = mysql_affected_rows();
 		
 		$message = "Deleted $students student and $files file entries.";
-		$message .= "<br />It is now safe to manually delete all files in the repository";
-		$message .= " that are associated with user \"{$uname}\" in class ID: \"{$_SESSION['classid']}\".";
+		if( $students > 0 ) {
+			$message .= "<br />It is now safe to manually delete all files in the repository";
+			$message .= " that are associated with user \"{$uname}\" in class ID: \"{$_SESSION['classid']}\".";
+		}
 		
 		soss_send_json_response(SOSS_RESPONSE_SUCCESS, $message);
 		

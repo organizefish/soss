@@ -127,6 +127,7 @@ YUI.add('soss-download-tab', function(Y, name) {
 		Y.on('click', dlFiles, '#download-button');
 		Y.on('change', selectAllCB, '#dl-select-all');
 		Y.on('soss:assign-change', updateAssignSelect);
+		Y.on('soss:student-change', updateStudentSelect);
 	});
 	
 },'2.0.0', { requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable'] });

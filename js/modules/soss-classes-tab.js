@@ -22,6 +22,33 @@
 
 YUI.add('soss-classes-tab', function(Y, name) {
 	
+	var deleteClass = function(e) {
+		e.preventDefault();
+		var tr = e.target.ancestor('tr');
+		var record = classesDT.get('recordset').getRecord(tr.get('id'));
+		var fullName = record.getValue("name") + " - " + record.getValue("term") +
+		 " " + record.getValue("year");
+		var message = "<p>About to delete class: " + fullName + ".</p>";
+		message += "<p>Are you sure you want to do this?</p>";
+		Y.soss.optionDialog.show( message, function() {
+			var url = "delete.php?t=class";
+			url += "&id=" + encodeURIComponent(record.getValue('id'));
+			Y.io(url ,{
+				method: 'GET',
+				on: {
+					success: function(id, r) {
+						if( r.parsedResponse.ResponseCode == 200 ) {
+							Y.soss.admin.showInfoMessage(r.parsedResponse.Message);
+							Y.fire("soss:class-change");
+						} else {
+							Y.soss.admin.showInfoMessage(r.parsedResponse.Message);
+						}
+					}
+				}
+			});
+		}, "Delete", "Cancel");
+	};
+	
 	var classesDT = null;
 	var initClassesDT = function() {
 		var activeFormatter = function(o) {
@@ -53,7 +80,7 @@ YUI.add('soss-classes-tab', function(Y, name) {
 		classesDT.datasource.load();
 		
 		Y.delegate('change', activeCheckboxChange, '#soss-admin-classes-table', 'input[type="checkbox"]');
-		Y.delegate('click', function(e) { Y.log("click event"); }, '#soss-admin-classes-table', '.trash-button' );
+		Y.delegate('click', deleteClass, '#soss-admin-classes-table', '.trash-button' );
 	};
 	
 	var activeCheckboxChange = function(e) {
@@ -136,43 +163,3 @@ YUI.add('soss-classes-tab', function(Y, name) {
 	});
 	
 },'2.0.0', { requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form', 'datatable'] });
-
-/*
-	
-	var deleteHandler = function(oArgs) {
-		var key = this.getColumn(oArgs.target).getKey();
-		if( key == "del" ) {
-			var rec = this.getRecord(oArgs.target);
-			classidToDelete = rec.getData("id");
-			classNameToDelete = rec.getData("name") + " - " + rec.getData("term") +
-			 " " + rec.getData("year");
-			showDeleteConfirmDialog();
-		}
-	};
-	
-	var deleteClass = function() {
-		if( ! classidToDelete ) return;
-		
-		var query = "delete.php?t=class";
-		query += "&id=" + YAHOO.soss.urlencode(classidToDelete);
-		
-		YAHOO.util.Connect.asyncRequest('GET', query,
-			{
-				success: function(o) { 
-					var result = YAHOO.soss.parseJSON(o.responseText);
-					if( result.ResponseCode == 200 ) {
-						YAHOO.soss.showInfoDialog(result.Message);
-						YAHOO.soss.event.onClassChange.fire();
-						classidToDelete = null;
-						classNameToDelete = null;
-					} else {
-						YAHOO.soss.showErrorDialog("" + result.Message);
-					}
-				},
-				failure: function(o) { 
-					YAHOO.soss.showErrorDialog("Error accessing server."); },
-				timeout:10000
-	
-			}, null );
-	};
-*/

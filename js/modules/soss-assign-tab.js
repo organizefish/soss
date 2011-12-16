@@ -22,6 +22,32 @@
 
 YUI.add('soss-assign-tab', function(Y, name) {
 	
+	
+	var deleteAssignment = function(e) {
+		e.preventDefault();
+		var tr = e.target.ancestor('tr');
+		var record = assignDT.get('recordset').getRecord(tr.get('id'));
+		var message = "<p>About to delete assignment: " + record.getValue('name') + ".</p>";
+		message += "<p>Are you sure you want to do this?</p>";
+		Y.soss.optionDialog.show( message, function() {
+			var url = "delete.php?t=assignment";
+			url += "&name=" + encodeURIComponent(record.getValue('name'));
+			Y.io(url ,{
+				method: 'GET',
+				on: {
+					success: function(id, r) {
+						if( r.parsedResponse.ResponseCode == 200 ) {
+							Y.soss.admin.showInfoMessage(r.parsedResponse.Message);
+							Y.fire("soss:assign-change");
+						} else {
+							Y.soss.admin.showInfoMessage(r.parsedResponse.Message);
+						}
+					}
+				}
+			});
+		}, "Delete", "Cancel");
+	};
+	
 	// Data table
 	var assignDT = null;
 	
@@ -105,6 +131,8 @@ YUI.add('soss-assign-tab', function(Y, name) {
 		assignDT.plug(Y.Plugin.DataTableDataSource, { datasource: source });
 		assignDT.render("#soss-admin-assignment-table");
 		assignDT.datasource.load();
+		Y.delegate('click', deleteAssignment, '#soss-admin-assignment-table', '.trash-button' );
+		
 		Y.on('soss:assign-change', function(e) { assignDT.datasource.load();});
 		
 		Y.on('click', addAssignment, '#soss-admin-new-assign-button');

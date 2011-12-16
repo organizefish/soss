@@ -38,8 +38,28 @@ var config = {
 	}
 };
 
-YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assign-tab', 'soss-students-tab', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','datasource-io', 'datatable', function(Y) {
+YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assign-tab', 'soss-students-tab', 'tabview', 'soss-passwd-dialog', 'datatype-date-math', 'datatype-date-parse', 'io-form','panel','overlay','datasource-io', 'datatable', function(Y) {
 
+	var messageOverlay = null;
+	Y.namespace('soss.admin');
+	Y.soss.admin.showInfoMessage = function(message) {
+		
+		if( messageOverlay == null ) {
+			messageOverlay = new Y.Overlay({
+		        width:"450px",
+		        bodyContent: "",
+		        zIndex:3,
+		        render: true,
+		        visible: false,
+		        align: {node: '#top-bar', points: [Y.WidgetPositionAlign.TC, Y.WidgetPositionAlign.BC]}
+		    });
+		}
+		messageOverlay.setStdModContent(Y.WidgetStdMod.BODY, 
+				'<div class="admin-info-message">'+ message+'</div>');
+		messageOverlay.show();
+		Y.later(20000, Y, function() {messageOverlay.hide();});
+	};
+	
 	var adminTabView;
 	
 	// Class has been changed server-side, update UI

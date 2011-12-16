@@ -51,6 +51,28 @@ YUI.add('soss-students-tab', function(Y, name) {
 	var deleteStudent = function(e) {
 		Y.log("deleteStudent");
 		e.preventDefault();
+		var tr = e.target.ancestor('tr');
+		var record = studentsDT.get('recordset').getRecord(tr.get('id'));
+		var uname = record.getValue('uname');
+		var message = "<p>About to delete student with username: " + uname + ".</p>";
+		message += "<p>Are you sure you want to do this?</p>";
+		Y.soss.optionDialog.show( message, function() {
+			var url = "delete.php?t=student";
+			url += "&uname=" + encodeURIComponent(uname);
+			Y.io(url ,{
+				method: 'GET',
+				on: {
+					success: function(id, r) {
+						if( r.parsedResponse.ResponseCode == 200 ) {
+							Y.soss.admin.showInfoMessage(r.parsedResponse.Message);
+							Y.fire("soss:student-change");
+						} else {
+							Y.soss.admin.showInfoMessage(r.parsedResponse.Message);
+						}
+					}
+				}
+			});
+		}, "Delete", "Cancel");
 	};
 	var addStudent = function(e) {
 		Y.log("addStudent");
@@ -190,6 +212,7 @@ YUI.add('soss-students-tab', function(Y, name) {
 				return '';
 		};
 		var chpassFormatter = function(o) {
+			if(Y.soss.core.useLdap) return '';
 			return '<a class="chpass-link" href="#">Change Password</a>';
 		};
 		var deleteFormatter = function(o) {return '<div class="trash-button"></div>'; };
@@ -223,6 +246,7 @@ YUI.add('soss-students-tab', function(Y, name) {
 		Y.on('click', showInstructionsPanel, '#soss-admin-bulk-instructions');
 		
 		Y.on('soss:select-class', function(e) { studentsDT.datasource.load(); });
+		Y.on('soss:student-change', function(e) {studentsDT.datasource.load(); });
 	});
 	
 }, '2.0.0', { requires: ['soss-passwd-dialog', 'soss-option-dialog', 'panel', 'event', 'io-base', 'io-form'] });

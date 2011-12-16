@@ -2,9 +2,11 @@ YUI.add('soss-option-dialog', function(Y, name) {
 	
 	Y.namespace('soss.optionDialog');
 	var dialog = null;
+	var okFunc = null;
 	Y.soss.optionDialog.show = function( content, onOk, confirmButton, cancelButton ) {
 		confirmButton = confirmButton || "Ok";
 		cancelButton = cancelButton || "Cancel";
+		okFunc = onOk;
 		// Lazy creation of the panel
 		if( dialog == null ) {
 			dialog = new Y.Panel( {
@@ -15,7 +17,7 @@ YUI.add('soss-option-dialog', function(Y, name) {
 				visible: false,
 				zIndex: 3,
 				buttons: [
-				          {value: "Yes", classNames: 'button-confirm', action: function(e) {e.preventDefault(); dialog.hide(); onOk(); }, section:Y.WidgetStdMod.FOOTER },
+				          {value: "Yes", classNames: 'button-confirm', action: function(e) {e.preventDefault(); dialog.hide(); okFunc(); }, section:Y.WidgetStdMod.FOOTER },
 				          {value: "No", classNames: 'button-cancel', action: function(e) {e.preventDefault(); dialog.hide(); }, section:Y.WidgetStdMod.FOOTER }
 				          ]
 			});

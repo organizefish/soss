@@ -19,3 +19,5 @@
 #soss-admin-new-student input { width: 100%; margin-bottom: 0.5em; }
 #soss-admin-bulk-students { width: 400px; margin: 0 -400px 0 10px; float: left; padding: 1em 0; }
 #soss-admin-bulk-students textarea { width: 350px; height: 150px; }
+
+.admin-info-message { background: yellow; padding: 0.5em; color:black; border: 1px rgb(100,100,100) solid;}
