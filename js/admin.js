@@ -72,6 +72,10 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assi
 	
 	var changeClass = function(e) {
 		var selectedId = e.target.get('value');
+		setClass(selectedId);
+	};
+	
+	var setClass = function(id) {
 		var cfg = {
 				method: 'GET',
 				on: {
@@ -83,7 +87,7 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assi
 					}
 				}
 			};
-		var url = 'setclass.php?id=' + encodeURIComponent(selectedId);
+		var url = 'setclass.php?id=' + encodeURIComponent(id);
 		Y.io(url, cfg);
 	};
 	
@@ -103,12 +107,18 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assi
 			if( Y.soss.core.session.classid < 0 ) {
 				select.set('selectedIndex', 0);
 			} else {
+				var found = false;
 				select.all('option').each( function(node, idx, list) {
 					var id = node.get('value');
 					if( id == Y.soss.core.session.classid ) {
 						select.set('selectedIndex', idx);
+						found = true;
 					}
 				});
+				if( ! found ) {
+					select.set('selectedIndex', 0);
+					setClass(select.get('value'));
+				}
 			}
 		};
 		
