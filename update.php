@@ -106,21 +106,6 @@ function change_student_pass() {
 	try {
 		$err_str = "";
 		$db = SOSS_DB::getInstance();
-		$old_pass = soss_get_request('curr_pass', false);
-		
-		// Check current password if we have less than admin rights.
-		if( $_SESSION['auth'] < AUTH_FACULTY ) {
-			$query = "SELECT passwd FROM %s WHERE passwd='%s' AND";
-			$query .= " username='%s' AND class_id='%s'";
-			$query = sprintf( $query,
-				SOSS_DB::$STUDENT_TABLE,
-				$db->dbclean( sha1($old_pass) ),
-				$db->dbclean( $_SESSION['uname'] ),
-				$db->dbclean( $_SESSION['classid'] ) );
-			$result = $db->query($query);
-			if( mysql_num_rows($result) != 1 ) 
-				soss_send_json_response(SOSS_RESPONSE_ERROR, "Incorrect password.");
-		}
 		
 		// Only admins can change a password for someone other than themselves
 		$requestedUname = soss_get_request('uname');
@@ -129,13 +114,38 @@ function change_student_pass() {
 		} else {
 			$uname = $_SESSION['uname'];
 		}
-   
+		
+		// The user's version of the old (current) password
+		$old_pass = soss_get_request('curr_pass', false);
+		
+		// Get the curret password from the database
+		$query = "SELECT passwd FROM %s WHERE ";
+		$query .= " username='%s' AND class_id='%s'";
+		$query = sprintf( $query,
+			SOSS_DB::$STUDENT_TABLE,
+			$db->dbclean( $uname ),
+			$db->dbclean( $_SESSION['classid'] ) );
+		$result = $db->query($query);
+		if( mysql_num_rows($result) != 1 ) 
+			soss_send_json_response(SOSS_RESPONSE_ERROR, "User account not found.");
+		else {
+			$row = $db->fetch_row($result);
+			$dbPass = $row['passwd'];
+			// If we have less than admin rights, we must provide the
+			// current password.  Check it.
+			if($_SESSION['auth'] < AUTH_FACULTY) {
+				if( strcasecmp(sha1($old_pass), $dbPass) !== 0 ) {
+					soss_send_json_response(SOSS_RESPONSE_ERROR, "Incorrect password.");
+				}
+			}
+		}
+		
 		// Check new passwords
 		$new_pass_1 = soss_get_request('new_pass_1', false);
 		$new_pass_2 = soss_get_request('new_pass_2', false);
 		if ( $new_pass_1 != $new_pass_2 ) {
 			$err_str = "New passwords don't match, try again.";
-		} elseif ( $new_pass_1 == $old_pass ) {
+		} elseif ( strcasecmp($dbPass, sha1($new_pass_1)) == 0 ) {
 			$err_str = "New password is the same as the old.  Password not changed.";
 		} else {
 			$query = "UPDATE %s ";

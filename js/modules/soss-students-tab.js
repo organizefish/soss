@@ -1,22 +1,4 @@
 YUI.add('soss-students-tab', function(Y, name) {
-	var messagePanel = null;
-	var showMessagePanel = function(message) {
-		// Lazy creation of the panel
-		if( messagePanel == null ) {
-			messagePanel = new Y.Panel( {
-				width: 450,
-				modal: true,
-				centered: true,
-				render: true,
-				visible: false,
-				zIndex: 3,
-				buttons: [ {value: 'Ok', action: function(e) { messagePanel.hide(); }, section:Y.WidgetStdMod.FOOTER }, {type:'close'}]
-			});
-		}
-		messagePanel.setStdModContent(Y.WidgetStdMod.BODY, message);
-		messagePanel.show();
-	};
-	
 	var chpass = function(e) {
 		Y.log("chpass");
 		e.preventDefault();
@@ -141,7 +123,7 @@ YUI.add('soss-students-tab', function(Y, name) {
 							for( var i = 0; i < errs.length; i++ )
 								message += "<li>" + errs[i] + "</li>";
 							message += "</ul>";
-							showMessagePanel(message);
+							Y.soss.admin.showInfoMessage(message);
 						}
 						studentsDT.datasource.load();
 					} else {

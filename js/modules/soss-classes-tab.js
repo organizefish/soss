@@ -101,6 +101,7 @@ YUI.add('soss-classes-tab', function(Y, name) {
 					if( r.parsedResponse.ResponseCode == 200 ) {
 						record.get('data').active = newState ? "Y" : "N";
 						e.target.set('checked', newState);
+						Y.fire('soss:class-change');
 					}
 				}
 			}		
