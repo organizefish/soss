@@ -1,11 +1,11 @@
 
 YUI.add('soss-core', function(Y, name) {
 	
-	// Render the console if we are in debug mode
-	if( YUI.config.debug ) {
-		new Y.Console({ logSource: Y.Global }).render();
-		Y.one('.yui3-console').setStyle('top', '3em');
-	}
+	// Render the console
+	//if( YUI.config.debug ) {
+	//	new Y.Console({ logSource: Y.Global }).render();
+	//	Y.one('.yui3-console').setStyle('top', '3em');
+	//}
 	Y.log("soss.js starting up", "info");
 	
 	Y.namespace("soss.core");

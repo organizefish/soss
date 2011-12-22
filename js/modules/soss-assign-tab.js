@@ -136,6 +136,7 @@ YUI.add('soss-assign-tab', function(Y, name) {
 		Y.on('soss:assign-change', function(e) { assignDT.datasource.load();});
 		
 		Y.on('click', addAssignment, '#soss-admin-new-assign-button');
+		Y.on('key', addAssignment, '#soss-admin-new-assign-name', 'enter');
 		Y.on('soss:select-class', function(e) { assignDT.datasource.load(); });
 	});
 	

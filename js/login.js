@@ -21,7 +21,7 @@
  */
 
 var config = {
-	debug: true,
+	debug: false,
 	groups: {
 		soss: {
 			base: 'js/modules/',
