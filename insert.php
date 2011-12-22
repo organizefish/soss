@@ -136,23 +136,27 @@ class Soss_Insert {
                 } else {
                     $uname = $email;
                 }
-
-                if( SOSS_USE_LDAP ) {
-                    $pass = "";
+				
+                if( $uname != SOSS_ADMIN_UNAME ) {
+	                if( SOSS_USE_LDAP ) {
+	                    $pass = "";
+	                } else {
+	                    $pass = sha1(SOSS_DEFAULT_PASS);
+	                }
+	
+	                $sql = sprintf($sql, SOSS_DB::$STUDENT_TABLE,
+	                                $db->dbclean($_SESSION['classid']),
+	                                $db->dbclean($uname),
+	                                $db->dbclean($email),
+	                                $db->dbclean($info['lname']),
+	                                $db->dbclean($info['fname']),
+	                                $db->dbclean($pass));
+	
+	                $result = $db->query($sql);
+	                $good_count++;
                 } else {
-                    $pass = sha1(SOSS_DEFAULT_PASS);
+                	$errors[] = "$uname is the same as the admin username, skipped.";
                 }
-
-                $sql = sprintf($sql, SOSS_DB::$STUDENT_TABLE,
-                                $db->dbclean($_SESSION['classid']),
-                                $db->dbclean($uname),
-                                $db->dbclean($email),
-                                $db->dbclean($info['lname']),
-                                $db->dbclean($info['fname']),
-                                $db->dbclean($pass));
-
-                $result = $db->query($sql);
-                $good_count++;
             } catch (SOSS_DB_Exception $e) {
 
                 if ($e->getCode() == 1062) {
@@ -309,25 +313,28 @@ class Soss_Insert {
                     } else {
                         $pass = sha1(SOSS_DEFAULT_PASS);
                     }
-
-                    $sql = "INSERT INTO %s(class_id, username, email, lastname, firstname,passwd,grader_priv) ";
-                    $sql .= "VALUES ('%s', '%s', '%s','%s','%s','%s', 'N')";
-
-                    $sql = sprintf($sql,
-                                    SOSS_DB::$STUDENT_TABLE,
-                                    $db->dbclean($_SESSION['classid']),
-                                    $db->dbclean($data['uname']),
-                                    $db->dbclean($data['email']),
-                                    $db->dbclean($data['lname']),
-                                    $db->dbclean($data['fname']),
-                                    $db->dbclean($pass));
-
-                    $result = $db->query($sql);
-
-                    if (mysql_affected_rows() != 1) {
-                        soss_send_json_response(SOSS_RESPONSE_ERROR, "Database error.");
-                    }
-                    soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Student account '{$data['uname']}' added.");
+					if( $data['uname'] != SOSS_ADMIN_UNAME) {
+	                    $sql = "INSERT INTO %s(class_id, username, email, lastname, firstname,passwd,grader_priv) ";
+	                    $sql .= "VALUES ('%s', '%s', '%s','%s','%s','%s', 'N')";
+	
+	                    $sql = sprintf($sql,
+	                                    SOSS_DB::$STUDENT_TABLE,
+	                                    $db->dbclean($_SESSION['classid']),
+	                                    $db->dbclean($data['uname']),
+	                                    $db->dbclean($data['email']),
+	                                    $db->dbclean($data['lname']),
+	                                    $db->dbclean($data['fname']),
+	                                    $db->dbclean($pass));
+	
+	                    $result = $db->query($sql);
+	
+	                    if (mysql_affected_rows() != 1) {
+	                        soss_send_json_response(SOSS_RESPONSE_ERROR, "Database error.");
+	                    }
+	                    soss_send_json_response(SOSS_RESPONSE_SUCCESS, "Student account '{$data['uname']}' added.");
+					} else {
+						soss_send_json_response(SOSS_RESPONSE_ERROR, "That username is not allowed because it is the same as the admin user.");
+					}
                 }
             }
         } catch (SOSS_DB_Exception $e) {
