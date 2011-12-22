@@ -2,62 +2,41 @@
 <html>
   <head>
 <!-- PAGE TITLE -->
-    <title>SOSS File Submission System -- Grader</title>
+    <title></title>
 <!-- END PAGE TITLE -->
 
     <!-- YUI CSS files --> 
- 	<link type="text/css" rel="stylesheet" href="lib/yui/build/reset-fonts-grids/reset-fonts-grids.css" />
-	<link type="text/css" rel="stylesheet" href="lib/yui/build/base/base-min.css" />
-    <link type="text/css" rel="stylesheet" href="lib/yui/build/tabview/assets/skins/sam/tabview.css" />
-    <link rel="stylesheet" type="text/css" href="lib/yui/build/button/assets/skins/sam/button.css" />
-	<link type="text/css" rel="stylesheet" href="lib/yui/build/datatable/assets/skins/sam/datatable.css" />
-	<link rel="stylesheet" type="text/css" href="lib/yui/build/container/assets/skins/sam/container.css" />
-
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssreset/cssreset-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssbase/cssbase-min.css" />
+ 	<link type="text/css" rel="stylesheet" href="lib/yui/build/cssfonts/cssfonts-min.css" />
+	
 	<!-- My CSS -->
 	<link type="text/css" rel="stylesheet" href="css/soss.css" />
 	<link type="text/css" rel="stylesheet" href="css/admin.css" />
 
-	<!-- YUI Javascript -->	
-	<script type="text/javascript" src="lib/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
-	<script type="text/javascript" src="lib/yui/build/element/element-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/tabview/tabview-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/datasource/datasource-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/resize/resize-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/json/json-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/button/button-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/connection/connection-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/get/get-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/dragdrop/dragdrop-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/calendar/calendar-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/datatable/datatable-min.js"></script>
-	<script type="text/javascript" src="lib/yui/build/container/container-min.js"></script>
+	<!-- YUI -->
+	<script src="lib/yui/build/yui/yui-min.js"></script>
 	
 	<!-- My Javascript -->
-	<script type="text/javascript" src="js/soss.js"></script>
 	<script type="text/javascript" src="js/grader.js"></script>
-	<script type="text/javascript" src="js/download.js"></script>
   </head>
-<body class="yui-skin-sam">
+  
+<body>
 	<div id="doc2">
 		<div id="hd">
-			<div class="top-bar">
-				<a href="student.html">Student Interface</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<span id="header-username"></span>
-                                <span id="change-pass-span"><a id="change-pass-link" href="#">Change&nbsp;Password</a>&nbsp;|&nbsp;</span>
-                                <a id="logout-link" href="#" >Sign Off</a>
+			<div id="top-bar">
+			    <span class="soss-site-title">SOSS</span>
+                <div id="top-bar-options">
+                <span id="top-bar-class-name"></span> (<span class="uname"></span>)
+                <a href="student.html">Student Interface</a>
+                <a id="logout-link" href="#" >Sign Off</a>
+				</div>
 			</div>
-
-<!-- PAGE TITLE -->
-			<h1>SOSS File Submission System -- <span id="user-class-name"></span></h1>
-<!-- END PAGE TITLE  -->
-
 		</div>
-		<div id="bd">
 		
-			<div id="soss-admin-tabs-container"></div>
-			<div id="soss-admin-tab-0">
-				<div class="soss-form-element">
-				<b>List by</b>: Student: 
+		<div id="bd">
+		  <div style="margin: 1em;">
+                <strong>List by</strong>: Student: 
 				<select id="soss-admin-student-select" name="student">
 				<option value="__all__">[All]</option></select>
 				and assignment: 
@@ -65,46 +44,17 @@
 				<option value="__all__">[All]</option>
 				</select>
 				<button id="soss-admin-list-button">List</button>
-				</div>
 				
 				<form id="soss-download-form" method="post" action="download.php">
 				<div id="soss-admin-submission-table"></div>
 				<button id="download-button">Download Selected</button>
 				</form>
-				
 			</div>
 		</div>
 		
-		<div id="ft">
-<!-- PAGE FOOTER -->
-		<p>Use of this system is restricted to authorized personnel only 
- 		and implies that you have read and understand general university network 
- 		policy. Unauthorized access, or attempts to access this system will be reported 
- 		to appropriate criminal and school authorities.</p>
-<!-- END PAGE FOOTER --> 		
+		<div id="ft">	
  		<p>SOSS version: <span id="soss-version"></span></p>
 		</div>
-		
-		<div id="change-student-pass-dialog">
-		<div class="hd">Change Password</div>
-		<div class="bd">
-		<form method="post" action="update.php?a=studentPass">
-		<table class="no-border center">
-			<tr><td><label for="old_pass">Current Password:</label></td>
-			<td><input type="password" name="old_pass" /></td></tr>
-			<tr><td><label for="student_pass_1">New Password:</label></td>
-			<td><input type="password" name="student_pass_1" /></td></tr>
-			<tr><td><label for="student_pass_2">New Password (again):</label></td>
-			<td><input type="password" name="student_pass_2" /></td></tr>
-		</table>
-		</form>
-		<div class="instructions">
-<!-- PASSWORD WARNING -->
-		<p></p>
-<!-- END PASSWORD WARNING -->
-		</div>
-		</div>
-	</div>
-	</div>
+	</div> <!-- #doc2 -->
 </body>
 </html>

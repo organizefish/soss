@@ -29,7 +29,7 @@ var config = {
 				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
 				'soss-passwd-dialog': {path: 'soss-passwd-dialog.js', requires: ['panel', 'event', 'io-base', 'io-form']},
 				'soss-classes-tab': {path: 'soss-classes-tab.js', requires: ['soss-core', 'panel', 'event', 'io-base', 'io-form']},
-				'soss-download-tab': {path: 'soss-download-tab.js', requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable']},
+				'soss-download-tab': {path: 'soss-download-tab.js', requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable', 'datatype-date-math', 'datatype-date-parse']},
 				'soss-assign-tab': {path: 'soss-assign-tab.js', requires:  ['soss-core', 'datatype-number-parse', 'datatype-date-format', 'event', 'io-base', 'io-form', 'datatable']},
 				'soss-students-tab': {path: 'soss-students-tab.js', requires: ['panel', 'soss-option-dialog', 'event', 'io-base', 'io-form'] },
 				'soss-option-dialog' : {path: 'soss-option-dialog.js', requires: ['panel', 'event'] }

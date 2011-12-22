@@ -130,4 +130,4 @@ YUI.add('soss-download-tab', function(Y, name) {
 		Y.on('soss:student-change', updateStudentSelect);
 	});
 	
-},'2.0.0', { requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable'] });
+},'2.0.0', { requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable', 'datatype-date-math', 'datatype-date-parse'] });

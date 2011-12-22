@@ -222,6 +222,7 @@ YUI(config).use('soss-core', 'soss-option-dialog', 'soss-passwd-dialog', 'dataty
 		Y.all('.uname').setContent(Y.soss.core.session.uname);
 		Y.one('#top-bar-class-name').setContent(Y.soss.core.session.className);
 		Y.one('#soss-version').setContent(Y.soss.core.version);
+		Y.one('title').setContent(Y.soss.core.siteTitle + " -- Student");
 		initSubmissionList();
 	});
 });

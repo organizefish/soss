@@ -20,93 +20,27 @@
     SOFTWARE.
  */
 
-(function() {
-	
-	var Dom = YAHOO.util.Dom,
-		Evt = YAHOO.util.Event;
-	
-	var CHANGE_PASS_LINK_ID = "change-pass-link",
-		CHANGE_PASS_DIALOG_ID = "change-student-pass-dialog",
-		LOGOUT_LINK_ID = "logout-link";
-	
-	var changePassDialog = null;
-	
-	var changePassHandler = function(e) {
-		Evt.preventDefault(e);
-		changePassDialog.show();
-	};
-	
-	var initUI = function() {
-		var myTabs = new YAHOO.widget.TabView();
-		
-		myTabs.addTab( new YAHOO.widget.Tab({
-		    label: 'Download Files',
-		    contentEl: Dom.get("soss-admin-tab-0"),
-		    active: true
-		}));
-		
-		myTabs.appendTo("soss-admin-tabs-container");
-		
-		var handleSubmit = function() { this.submit(); };
-		var handleCancel = function() { this.hide(); };
-		// Instantiate the Dialog
-		changePassDialog = new YAHOO.widget.Dialog(
-				CHANGE_PASS_DIALOG_ID, 
-					{ width : "30em",
-					  fixedcenter : true,
-					  visible : false, 
-					  modal: true,
-					  constraintoviewport : true,
-					  draggable: false,
-					  buttons : [ { text:"Change", handler:handleSubmit, isDefault:true },
-								  { text:"Cancel", handler:handleCancel } ]
-					 } );
-		changePassDialog.render();
-		
-		var handleSuccess = function(o) {
-			var result = YAHOO.soss.parseJSON(o.responseText);
-			if( result.ResponseCode != 200 ) {
-				YAHOO.soss.showErrorDialog(result.Message);
-			} else {
-				YAHOO.soss.showInfoDialog("Password successfully changed.");
+var config = {
+	debug: true,
+	groups: {
+		soss: {
+			base: 'js/modules/',
+			modules: {
+				'soss-core': {path: 'soss-core.js', requires: ['dump', 'datatype-date-parse','datatype-date-format', 'event','console','io-base','json-parse','datasource-io','datasource-jsonschema']},
+				'soss-download-tab': {path: 'soss-download-tab.js', requires: ['soss-core', 'event', 'io-base', 'io-form', 'datatable','datatype-date-math', 'datatype-date-parse']}
 			}
-		};
-		
-		var handleFailure = function() {
-			YAHOO.soss.showErrorDialog("Unable to change password (server error).");
-		};
-		
-		changePassDialog.callback = { success: handleSuccess,
-				failure:handleFailure };
-		
-		// Validate the entries in the form to require that both first and last name are entered
-		changePassDialog.validate = function() {
-			var data = this.getData();
-			if (data.student_pass_1 != data.student_pass_2) {
-				YAHOO.soss.showErrorDialog("Passwords don't match.");
-				return false;
-			} else {
-				return true;
-			}
-		};
-		
-		Evt.addListener(CHANGE_PASS_LINK_ID, "click", changePassHandler);
-		Evt.addListener(LOGOUT_LINK_ID,"click",signOff);
-	};
+		}	
+	}
+};
+
+YUI(config).use('soss-core', 'soss-download-tab', function(Y) {
+	Y.one('body').addClass('yui3-skin-sam');
 	
-	var signOff = function(e) {
-		Evt.preventDefault(e);
-		var callback = {
-			success: function() {
-				window.open("login.html","_self");
-			},
-			failure: function() { 
-				alert("Failed to contact server.");
-				window.open("login.html","_self");
-			}
-		};
-		YAHOO.util.Connect.asyncRequest('GET', 'auth.php?a=logout', callback);
-	};
-	
-	Evt.addListener(window, "load", initUI);
-})();
+	Y.on('soss:ready', function() {
+		Y.one('#soss-version').setContent(Y.soss.core.version);
+		Y.all('.uname').setContent(Y.soss.core.session.uname);
+		Y.one('#top-bar-class-name').setContent(Y.soss.core.session.className);
+		Y.one('#logout-link').on('click', Y.soss.event.logout);
+		Y.fire('soss:admin-ready');
+	});
+});
