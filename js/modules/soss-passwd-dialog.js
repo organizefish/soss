@@ -7,9 +7,8 @@ YUI.add('soss-passwd-dialog', function(Y, name) {
 		
 		doChange = function() {
 			var url = "update.php?";
-			url += "a=studentPass";
+			url += "a=passwd";
 			var messageNode = Y.soss.passwdDialog.dialog.getStdModNode(Y.WidgetStdMod.BODY).one('.message');
-			Y.log(url + " uname = " + uname);
 			Y.io(url, {
 				method: 'POST',
 				form: {id:'soss-passwd-dialog'},

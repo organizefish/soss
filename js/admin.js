@@ -129,6 +129,10 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assi
 		Y.io( url, { on: callback } );
 	};
 	
+	var changeAdminPass = function(e) {
+		Y.soss.passwdDialog.show(Y.soss.core.session.uname, true);
+	};
+	
 	Y.on("soss:ready", function(e) {
 		Y.one('#soss-version').setContent(Y.soss.core.version);
 		
@@ -142,6 +146,7 @@ YUI(config).use('soss-core', 'soss-classes-tab', 'soss-download-tab', 'soss-assi
 		updateClassList();
 		Y.one('#inactive-class-checkbox').on('change', updateClassList);
 		Y.one('#change-class-select').on('change', changeClass);
+		Y.on('click', changeAdminPass, '#change-pass-link');
 		Y.on('soss:class-change', updateClassList);
 		Y.on('click', Y.soss.event.logout, '#logout-link');
 		Y.all('.class-name').setContent(Y.soss.core.session.className);

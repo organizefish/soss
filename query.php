@@ -202,7 +202,7 @@ function sendCoreInfo()
 		if( $auth < AUTH_FACULTY ) {
 			$info['session']['uname'] = $_SESSION['uname'];
 		} else {
-			$info['session']['uname'] = "Faculty";
+			$info['session']['uname'] = SOSS_ADMIN_UNAME;
 		}
 		$info['session']['className'] = $_SESSION['class_name'];
 		$info['session']['classid'] = $_SESSION['classid'];
@@ -217,7 +217,6 @@ function sendCoreInfo()
 	}
 	
 	$info['siteTitle'] = SOSS_SITE_TITLE;
-	
 	$info["uploadMaxFileSize"] = format_bytes(ini_to_bytes(ini_get('upload_max_filesize') ));
 	$info["uploadMaxFileSizeBytes"] = ini_to_bytes(ini_get('upload_max_filesize') );
 	$info["postMaxSize"] = format_bytes(ini_to_bytes(ini_get('post_max_size')));

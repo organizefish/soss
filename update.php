@@ -29,15 +29,27 @@ require 'soss_json.php';
 $action = soss_get_request('a');
 $auth = $_SESSION['auth'];
 
-// This action can be done by a student
+// You need at least to be logged-in to do anything here.
 if( empty($auth) or $auth < AUTH_STUDENT ) {
 	soss_send_json_response(SOSS_RESPONSE_PERMISSION_DENIED, "Access Denied.");
 }
-if($action == "studentPass") {
-	change_student_pass();
+
+// The change password action
+if($action == "passwd") {
+	$requestUname = soss_get_request('uname');
+	// If we're trying to change the admin's password, only AUTH_FACULTY can do so.
+	if( $requestUname == SOSS_ADMIN_UNAME ) {
+		if( empty($auth) ||  $auth < AUTH_FACULTY ) {
+			soss_send_json_response(SOSS_RESPONSE_PERMISSION_DENIED, "Access Denied.");
+		} else {
+			change_admin_pass();
+		}
+	} else {
+		change_student_pass();
+	}
 }
 
-// All the following update actions require faculty auth
+// All the following update actions require admin auth
 if( empty($auth) or $auth < AUTH_FACULTY ) {
 	soss_send_json_response(SOSS_RESPONSE_PERMISSION_DENIED, "Access Denied.");
 }
@@ -46,8 +58,6 @@ if( $action == "classActiveStatus" ) {
 	change_class_active_status();
 } elseif( $action == "stuGraderStatus") {
 	change_student_grader_status();
-} elseif( $action == "adminPass") {
-	change_admin_pass();
 } else {
 	soss_send_json_response(SOSS_RESPONSE_ERROR,"Unrecognized action.");
 }
@@ -58,15 +68,15 @@ function change_admin_pass() {
 		
 		$sql = "SELECT passwd FROM %s WHERE passwd='%s'";
    
-		$old_pass = soss_get_request('old_pass', false);
+		$old_pass = soss_get_request('curr_pass', false);
 		$sql = sprintf( $sql ,
 			SOSS_DB::$FACULTY_TABLE,
 			$db->dbclean(sha1($old_pass)) );
 		
 		$result = $db->query($sql);
 		
-		$new_pass_1 = soss_get_request('pass_1', false );
-		$new_pass_2 = soss_get_request('pass_2', false );
+		$new_pass_1 = soss_get_request('new_pass_1', false );
+		$new_pass_2 = soss_get_request('new_pass_2', false );
 		
 		if( mysql_num_rows($result) != 1 ) {
 			soss_send_json_response(SOSS_RESPONSE_ERROR,
