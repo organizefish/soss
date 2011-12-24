@@ -52,7 +52,7 @@ define("SOSS_UPLOAD_UMASK", 0007);
 //////////////////////////////////////
 
 // Whether or not to use LDAP for account authentication
-define("SOSS_USE_LDAP", false);
+define("SOSS_USE_LDAP", true);
 // The LDAP URL (use ldaps: for SSL)
 define("SOSS_LDAP_HOST", "ldap://localhost");
 // The LDAP port (389 or 636 typically)

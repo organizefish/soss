@@ -28,7 +28,6 @@
                 <div id="top-bar-options">
                 <select id="change-class-select"></select> <input id="inactive-class-checkbox" type="checkbox" /> 
 			Include inactive
-                <a id="change-pass-link" href="#">Change Admin Password</a>
 				<a id="logout-link" href="#" >Sign Off</a>
 				</div>
 			</div>
@@ -57,7 +56,7 @@
 				<option value="__all__">[All]</option>
 				</select>
 				<button id="soss-admin-list-button">List</button>
-				
+				<p id="soss-admin-dl-message"></p>
 				<form id="soss-download-form" method="post" action="download.php">
 				<div id="soss-admin-submission-table"></div>
 				<button id="download-button">Download Selected</button>
@@ -74,6 +73,7 @@
 				<select id="soss-admin-new-assign-ddhour"></select>
 				:<select id="soss-admin-new-assign-ddmin"></select></span>
 				<button id="soss-admin-new-assign-button">Add</button>
+				<p id="soss-admin-new-assign-message"></p>
 				<div id="soss-admin-assignment-table"></div>
 			</div>
 			<div id="soss-admin-classes-tab">
@@ -82,7 +82,7 @@
 				term:<span class="reqd">*</span> <select id="soss-admin-term-select" name="term"></select>
 				year:<span class="reqd">*</span> <input id="soss-admin-class-year" type="text" maxlength="4" name="year" />
 				<button id="soss-admin-new-class-button">Add</button>
-				<p class="message"></p>
+				<p id="soss-admin-new-class-message"></p>
 				
 				<div id="soss-admin-classes-table"></div>
 			</div>
@@ -114,7 +114,10 @@
 		</div><!-- #bd -->
 		
 		<div id="ft">	
- 		<p>SOSS version: <span id="soss-version"></span></p>
+ 		<div id="ft-version"><p>SOSS version: <span id="soss-version"></span></p></div>
+ 		<ul>
+ 		  <li><a id="change-pass-link" href="#">Change Admin Password</a></li>
+ 		</ul>
 		</div>
 	</div>
 	

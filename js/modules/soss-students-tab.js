@@ -202,10 +202,12 @@ YUI.add('soss-students-tab', function(Y, name) {
 		            {key:"uname",label:"Username" },
 		            {key:"name",label:"Full Name", formatter:fullNameFormatter },
 		            {key:"grader",label:"Grader", formatter:graderFormatter },
-		            {key:"email",label:"Email", formatter: emailFormatter},
-		            {key:"chpass", label:"", formatter: chpassFormatter},
-		            {key:"delete", label: "", formatter: deleteFormatter}
+		            {key:"email",label:"Email", formatter: emailFormatter}
 		            ];
+		if( ! Y.soss.core.useLdap ) 
+			cols.push({key:"chpass", label:"", formatter: chpassFormatter});
+		cols.push( {key:"delete", label: "", formatter: deleteFormatter} );
+		
 		var source = new Y.DataSource.IO({
             source: "query.php?q=students"
         }).plug(Y.Plugin.DataSourceJSONSchema, {
@@ -219,7 +221,8 @@ YUI.add('soss-students-tab', function(Y, name) {
 		studentsDT.render("#soss-admin-students-table");
 		studentsDT.datasource.load();
 		
-		Y.delegate('click', chpass, '#soss-admin-students-table', '.chpass-link');
+		if( ! Y.soss.core.useLdap )
+			Y.delegate('click', chpass, '#soss-admin-students-table', '.chpass-link');
 		Y.delegate('click', deleteStudent, '#soss-admin-students-table', '.trash-button');
 		Y.delegate('click', changeGraderStatus, '#soss-admin-students-table', '.grader-cb');
 		

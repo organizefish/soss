@@ -224,5 +224,7 @@ YUI(config).use('soss-core', 'soss-option-dialog', 'soss-passwd-dialog', 'dataty
 		Y.one('#soss-version').setContent(Y.soss.core.version);
 		Y.one('title').setContent(Y.soss.core.siteTitle + " -- Student");
 		initSubmissionList();
+		if(Y.soss.core.useLdap)
+			Y.one('#change-pass-link').ancestor('li').setStyle('display', 'none');
 	});
 });

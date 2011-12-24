@@ -5,8 +5,8 @@ input.file_input { }
 #assignment-select { width: 100%; }
 #upload-form-container {margin-top: 1em;}
 
-#upload-form-container { padding: 0 1em 1em 1em; background: rgb(240,240,240); border: 1px solid rgb(150,150,150);
-	width: 600px; }
+#upload-form-container { padding: 0 1em 1em 1em; background: rgb(245,245,245); border: 1px solid rgb(150,150,150);
+	width: 600px; border-radius: 5px; }
 #upload-meta { list-style: none; margin-left:0; }
 #upload-meta li { margin-top: 1.0em; }
 #num-files-select { width: 5em; }

@@ -21,3 +21,5 @@
 #soss-admin-bulk-students textarea { width: 350px; height: 150px; }
 
 .admin-info-message { background: yellow; padding: 0.5em; color:black; border: 1px rgb(100,100,100) solid;}
+
+#soss-admin-tabs-content { background: rgb(245,245,245); padding: 1em 1em 3em 1em; }

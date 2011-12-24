@@ -54,6 +54,8 @@ YUI.add('soss-assign-tab', function(Y, name) {
 	var addAssignment = function(e) {
 		var aname = Y.Lang.trim(Y.one('#soss-admin-new-assign-name').get('value'));
 		
+		if( Y.soss.core.session.classid < 0 ) return;
+		
 		var query = "insert.php?t=assignment";
 		if( ! aname ) return;
 		query += "&aname=" + encodeURIComponent(aname);

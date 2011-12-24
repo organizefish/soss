@@ -109,7 +109,7 @@ YUI.add('soss-classes-tab', function(Y, name) {
 	};
 	
 	var addClass = function(e) {
-		var messNode = Y.one('#soss-admin-classes-tab .message');
+		var messNode = Y.one('#soss-admin-new-class-message');
 		messNode.addClass('error');
 		messNode.setContent('');
 		var cnameNode = Y.one('#soss-admin-new-class-name');
@@ -119,11 +119,13 @@ YUI.add('soss-classes-tab', function(Y, name) {
 		
 		if( cname === '' ) {
 			messNode.setContent("Please provide a class name.");
+			messNode.setStyle('display','block');
 			return;
 		}
 		
 		if( ! cyear.match(/^\d{4}$/) ) {
 			messNode.setContent("That doesn't look like a valid year.  The year should have 4 digits.");
+			messNode.setStyle('display','block');
 			return;
 		}
 		
@@ -140,7 +142,9 @@ YUI.add('soss-classes-tab', function(Y, name) {
 						cnameNode.set('value','');
 						Y.fire('soss:class-change');
 					} else {
-						YAHOO.soss.showErrorDialog("" + result.Message);
+						messNode.setContent(r.parsedResponse.Message);
+						messNode.setStyle('display','block');
+						Y.later(5000, Y, function() { messNode.setStyle('display','none');} );
 					}
 				}
 			}
