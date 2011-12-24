@@ -30,21 +30,17 @@ See README
    $ mysql -u soss_user -p soss_db < db/soss.sql
 
 4. Create a directory for the storage of uploaded files.  This directory
-   need not be in the web tree, but must have write and execute permissions 
+   should not be in the web tree, and must have write and execute permissions 
    for the user that the web server runs under.
    
 5. Edit the file config.php to match your installation.  Take special care to
    change the SOSS_FILE_REPOSITORY constant to point to the directory that
    you created in the previous step.
 
-6. You may need to install the YUI library into the lib directory if it is not
-   already there.  Download the full SDK from developer.yahoo.com/yui/2
-   
-7. (Optional) Edit the files student.html, admin.html, and grader.html
-   to make them more appropriate for your users.  Search for "PAGE TITLE",
-   "PAGE FOOTER", and "PASSWORD WARNING".
+6. You may need to install the YUI-3 library into the lib directory if it is not
+   already there.  Download the full SDK from yuilibrary.com
   
-8. Bring up the file faculty_login.html through your web server, the default
-   password is "faculty" (you should probably change it).
+7. Bring up the file login.html through your web server, the default
+   administrator password is "faculty" (you should probably change it).
 
 
