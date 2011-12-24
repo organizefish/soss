@@ -14,7 +14,7 @@
 #soss-admin-new-assign-ddcb { margin-right: 0.4em;}
 
 #soss-admin-students-form-container { margin-bottom: 1.5em; border-bottom: 1px solid rgb(80,80,80); }
-#soss-admin-students-form-container:after { display:block; content:'.'; height:0; clear:both; }
+#soss-admin-students-form-container:after { display:block; content:'.'; height:0; clear:both; visibility: hidden; }
 #soss-admin-new-student { border-left: 1px solid rgb(80,80,80); padding: 0 0 1em 2em; margin: 0 0 0 400px;  width: 350px; float: left; }
 #soss-admin-new-student input { width: 100%; margin-bottom: 0.5em; }
 #soss-admin-bulk-students { width: 400px; margin: 0 -400px 0 10px; float: left; padding: 1em 0; }
