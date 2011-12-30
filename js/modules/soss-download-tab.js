@@ -85,13 +85,20 @@ YUI.add('soss-download-tab', function(Y, name) {
 			return '<input type="checkbox" name="file_list[]" value="' + o.record.getValue('id') + '" />';
 		};
 		var sdateFormatter = function(o) {
-			var sd = Y.DataType.Date.parse(o.record.getValue('sdate'));
-			var dd = Y.DataType.Date.parse(o.record.getValue('ddate'));
-			var d = Y.DataType.Date.format(sd, {format: '%m/%d/%Y %I:%M %p'});
-			if( Y.DataType.Date.isGreater(sd, dd) ) {
-				return '<span class="late">'+d+'</span>';
+			var rd = null, dd = null, dStr = '';
+			var d = o.record.getValue('sdate');
+			if( d != null && d.trim() !== '' ) {
+				rd = Y.DataType.Date.parse(d.replace(/ /, 'T'));
+				dStr = Y.DataType.Date.format(rd, {format: '%m/%d/%Y %I:%M %p'});
 			}
-			return d;
+			d = o.record.getValue('ddate');
+			if( d != null && d.trim() !== '' ) 
+				dd = Y.DataType.Date.parse(d.replace(/ /, 'T'));
+			
+			if( rd != null && dd != null && Y.DataType.Date.isGreater(rd, dd) ) {
+				return '<span class="late">'+dStr+'</span>';
+			}
+			return dStr;
 		};
 		var cols = [
 		            { key:"ckbox", 

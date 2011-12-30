@@ -142,15 +142,20 @@ YUI(config).use('soss-core', 'soss-option-dialog', 'soss-passwd-dialog', 'dataty
 			return o.value;
 		};
 		var rDateFormatter = function(o) {
-			if( o.rowindex >= 0 ) {
-				var rd = Y.DataType.Date.parse(o.record.getValue('rdate'));
-				var dd = Y.DataType.Date.parse(o.record.getValue('ddate'));
-				var d = Y.DataType.Date.format(rd, {format: '%m/%d/%Y %I:%M %p'});
-				if( Y.DataType.Date.isGreater(rd, dd) ) {
-					return '<span class="late">'+d+'</span>';
-				}
+			var rd = null, dd = null, dStr = '';
+			var d = o.record.getValue('rdate');
+			if( d != null && d.trim() !== '' ) {
+				rd = Y.DataType.Date.parse(d.replace(/ /, 'T'));
+				dStr = Y.DataType.Date.format(rd, {format: '%m/%d/%Y %I:%M %p'});
 			}
-			return d;
+			d = o.record.getValue('ddate');
+			if( d != null && d.trim() !== '' ) 
+				dd = Y.DataType.Date.parse(d.replace(/ /, 'T'));
+			
+			if( rd != null && dd != null && Y.DataType.Date.isGreater(rd, dd) ) {
+				return '<span class="late">'+dStr+'</span>';
+			}
+			return dStr;
 		};
 		var cols = [
 		            {key:"aname",label:"Assignment Name", formatter: aNameFormatter },

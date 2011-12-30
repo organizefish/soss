@@ -2,10 +2,10 @@
 YUI.add('soss-core', function(Y, name) {
 	
 	// Render the console
-	//if( YUI.config.debug ) {
-	//	new Y.Console({ logSource: Y.Global }).render();
-	//	Y.one('.yui3-console').setStyle('top', '3em');
-	//}
+//	if( YUI.config.debug ) {
+//		new Y.Console({ logSource: Y.Global }).render();
+//		Y.one('.yui3-console').setStyle('top', '3em');
+//	}
 	Y.log("soss.js starting up", "info");
 	
 	Y.namespace("soss.core");
@@ -30,8 +30,11 @@ YUI.add('soss-core', function(Y, name) {
 	};
 	
 	Y.soss.formatter.date = function(o) {
-		if( o.value )
-			return Y.DataType.Date.format( Y.DataType.Date.parse(o.value), {format: "%m/%d/%Y %I:%M %p"});
+		var d = o.value;
+		if( d !== null && d !== '' ) {
+			var dd = Y.DataType.Date.parse( d.replace(/ /, 'T') );
+			return Y.DataType.Date.format(dd, {format: "%m/%d/%Y %I:%M %p"});
+		}
 		else return '';
 	};
 	
