@@ -88,12 +88,12 @@ YUI.add('soss-download-tab', function(Y, name) {
 			var rd = null, dd = null, dStr = '';
 			var d = o.record.getValue('sdate');
 			if( d != null && d.trim() !== '' ) {
-				rd = Y.DataType.Date.parse(d.replace(/ /, 'T'));
+				rd = Y.soss.util.parseSqlDate(d);
 				dStr = Y.DataType.Date.format(rd, {format: '%m/%d/%Y %I:%M %p'});
 			}
 			d = o.record.getValue('ddate');
 			if( d != null && d.trim() !== '' ) 
-				dd = Y.DataType.Date.parse(d.replace(/ /, 'T'));
+				dd = Y.soss.util.parseSqlDate(d);
 			
 			if( rd != null && dd != null && Y.DataType.Date.isGreater(rd, dd) ) {
 				return '<span class="late">'+dStr+'</span>';

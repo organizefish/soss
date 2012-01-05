@@ -11,6 +11,7 @@ YUI.add('soss-core', function(Y, name) {
 	Y.namespace("soss.core");
 	Y.namespace("soss.event");
 	Y.namespace("soss.formatter");
+	Y.namespace("soss.util");
 	
 	var GUID = Y.guid();
 	
@@ -29,10 +30,23 @@ YUI.add('soss-core', function(Y, name) {
 		});
 	};
 	
+	Y.soss.util.parseSqlDate = function( d ) {
+		if( d == null || d == '' ) return null;
+		
+		var parts = d.split(' ');
+		var datePart = parts[0].split('-');
+		if (parts.length > 1) {
+			var timePart = parts[1].split(':');
+			return new Date(datePart[0],datePart[1]-1,datePart[2],timePart[0],timePart[1],timePart[2]);
+		} else {
+			return new Date(datePart[0],datePart[1]-1,datePart[2]);
+		}
+	};
+	
 	Y.soss.formatter.date = function(o) {
 		var d = o.value;
 		if( d !== null && d !== '' ) {
-			var dd = Y.DataType.Date.parse( d.replace(/ /, 'T') );
+			var dd = Y.soss.util.parseSqlDate(d);
 			return Y.DataType.Date.format(dd, {format: "%m/%d/%Y %I:%M %p"});
 		}
 		else return '';
